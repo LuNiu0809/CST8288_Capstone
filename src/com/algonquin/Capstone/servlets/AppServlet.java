@@ -7,7 +7,7 @@ import javax.servlet.http.HttpServlet;
 /**
  * Servlet implementation class LogsServlet
  */
-@WebServlet(description = "Loggy Logs", urlPatterns = { "/logs" })
+@WebServlet(description = "CST8288", urlPatterns = { "CST8288" })
 public class AppServlet extends HttpServlet {
 
 	/**
