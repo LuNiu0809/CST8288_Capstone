@@ -4,14 +4,14 @@
 package com.algonquin.Capstone.dao;
 
 import java.sql.Connection;
-import java.sql.Date;
+
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
 import com.algonquin.Capstone.beans.Business;
-import com.algonquin.Capstone.beans.Review;
+
 
 
 
@@ -155,10 +155,11 @@ public class BusinessDao {
 				PreparedStatement readBusiness = connection.prepareStatement(
 						"SELECT id, Name, Address, Description, PhoneNumber, Email, OverallRating, PriceRating, FoodType, HoursOfOperation" 						
 								+ " FROM business "
+								+ " WHERE id = ?" 
 										
 						);
 				) {							
-			
+			readBusiness.setInt(1, businessID);
 			rs = readBusiness.executeQuery();
 			Business business = new Business();
 			

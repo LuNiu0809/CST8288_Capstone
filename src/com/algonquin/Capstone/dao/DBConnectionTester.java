@@ -21,7 +21,10 @@ class DBConnectionTester {
 	 */
 	@Test
 	void testDBConnection() {
-		assertNotNull(connnection = DBConnection.getConnectionToDatabase());	
+		
+
+			assertNotNull(connnection = DBConnection.getConnectionToDatabase());
+
 	}
 
 }
