@@ -36,6 +36,7 @@ public class Review {
 	 */
 	public Review() {
 		usefulCount = 0;
+		
 		priceRating = new Rating();
 		overallRating = new Rating();
 		foodRating = new Rating();
@@ -120,8 +121,8 @@ public class Review {
 	 * Gets the price rating of this review. 
 	 * @return the price rating. 
 	 */
-	public Rating getPriceRating() {
-		return priceRating;
+	public int getPriceRating() {
+		return priceRating.getRating();
 	}
 	
 	/**
@@ -138,8 +139,8 @@ public class Review {
 	 * Gets the food rating of this review
 	 * @return the food rating. 
 	 */
-	public Rating getFoodRating() {
-		return foodRating;
+	public int getFoodRating() {
+		return foodRating.getRating();
 	}
 	
 	/**
@@ -156,8 +157,8 @@ public class Review {
 	 * gets the service rating for this review.
 	 * @return the service rating
 	 */
-	public Rating getServiceRating() {
-		return serviceRating;
+	public int getServiceRating() {
+		return serviceRating.getRating();
 	}
 	
 	/**
@@ -174,8 +175,8 @@ public class Review {
 	 * gets the atmosphere rating for this review. 
 	 * @return the atmosphere rating. 
 	 */
-	public Rating getAtmosphereRating() {
-		return atmosphereRating;
+	public int getAtmosphereRating() {
+		return atmosphereRating.getRating();
 	}
 	
 	/**
