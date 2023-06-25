@@ -43,11 +43,11 @@ public class ReviewDao {
 			// https://stackoverflow.com/questions/16645724/how-to-insert-date-into-mysql-database-table-in-java
 			newReview.setDate(3, new java.sql.Date(review.getCreationDate().getTime()));
 			newReview.setString(4, review.getContent());
-			newReview.setInt(5, review.getPriceRating().getRating());
+			newReview.setInt(5, review.getPriceRating());
 			newReview.setInt(6, review.getOverallRating());
-			newReview.setInt(7, review.getFoodRating().getRating());
-			newReview.setInt(8, review.getServiceRating().getRating());
-			newReview.setInt(9, review.getAtmosphereRating().getRating());
+			newReview.setInt(7, review.getFoodRating());
+			newReview.setInt(8, review.getServiceRating());
+			newReview.setInt(9, review.getAtmosphereRating());
 			newReview.setInt(10, review.getUsefulCount());
 			
 	
@@ -62,7 +62,7 @@ public class ReviewDao {
 	}
 	
 	/**
-	 * Reads the top 5 reviews for a business.
+	 * Reads the request number of reviews for a business.
 	 * @param businessID the id of the business to get reviews for
 	 * @param numReviews the number of reviews to return for the business
 	 * @return the top 5 reviews for the requested business

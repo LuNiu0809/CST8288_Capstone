@@ -15,10 +15,18 @@ public class Business {
 	private String address;
 	private String phoneNumber;
 	private String email;
-	
+	private String foodType;
 	private Rating overallRating;
 	private Rating priceRating;
 	private String hoursOfOperation;
+	
+	/**
+	 * Constructs a new business with default values. 
+	 */
+	public Business() {
+		overallRating = new Rating();
+		priceRating = new Rating();
+	}
 	
 	/**
 	 * Get the id of this business
@@ -105,32 +113,49 @@ public class Business {
 		this.email = email;
 	}
 	/**
+	 * gets the food type for this business
+	 * @return the food type. 
+	 */
+	public String getFoodType() {
+		return foodType;
+	}
+	
+	/**
+	 * sets the food type for this business
+	 * @param foodtype the food type. 
+	 */
+	public void setFoodType(String foodtype) {
+		this.foodType = foodtype;
+	}
+	
+	
+	/**
 	 * get the overall rating of this business
 	 * @return the overallRating
 	 */
-	public Rating getOverallRating() {
-		return overallRating;
+	public int getOverallRating() {
+		return overallRating.getRating();
 	}
 	/**
 	 * set the overall rating of this business
 	 * @param overallRating the overallRating to set
 	 */
-	public void setOverallRating(Rating overallRating) {
-		this.overallRating = overallRating;
+	public void setOverallRating(int overallRating) {
+		this.overallRating.setRating(overallRating);
 	}
 	/**
 	 * get the price rating of this business
 	 * @return the priceRating
 	 */
-	public Rating getPriceRating() {
-		return priceRating;
+	public int getPriceRating() {
+		return priceRating.getRating();
 	}
 	/**
 	 * set the price rating of this business
 	 * @param priceRating the priceRating to set
 	 */
-	public void setPriceRating(Rating priceRating) {
-		this.priceRating = priceRating;
+	public void setPriceRating(int priceRating) {
+		this.priceRating.setRating(priceRating);
 	}
 	/**
 	 * get the hours of operation for this business
@@ -145,6 +170,23 @@ public class Business {
 	 */
 	public void setHoursOfOperation(String hoursOfOperation) {
 		this.hoursOfOperation = hoursOfOperation;
+	}
+	
+	/**
+	 * prints the business info to the console, used for testing. 
+	 */
+	public void printBusinessToConsole() {
+		System.out.println("Printing Business ID " + id );
+		System.out.println("Name " + name);
+		System.out.println("Description " + description);
+		System.out.println("address " + address);
+		System.out.println("phoneNumber " + phoneNumber);
+		System.out.println("email " + email);
+		System.out.println("foodType " + foodType);
+		System.out.println("overallRating " + overallRating.getRating());
+		System.out.println("priceRating " + priceRating.getRating());
+		System.out.println("hours of operation " + hoursOfOperation);
+		System.out.println();
 	}
 	
 
