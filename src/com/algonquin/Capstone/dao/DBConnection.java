@@ -25,12 +25,19 @@ public class DBConnection {
     /**
      * Creates and returns a connection the database
      * @return the connection. 
+     * @throws ClassNotFoundException 
      */
-    public static Connection getConnectionToDatabase() {
+    public static Connection getConnectionToDatabase()  {
     	    	
        Connection connection = null;
        try {		
+    	    Class.forName("com.mysql.cj.jdbc.Driver");
 			connection = DriverManager.getConnection(URL, USER, PASSWORD);
+			
+		}catch (ClassNotFoundException e) {
+			System.out.println("Where is your MySQL JDBC Driver?");
+			e.printStackTrace();
+
 		}
 
 		catch (SQLException e) {
