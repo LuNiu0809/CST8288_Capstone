@@ -5,34 +5,7 @@
 <head>
 <link rel="stylesheet" href="style.css" >
   <title>Home Page</title>
-<!--   <style>
-    body {
-      font-family: Arial, sans-serif;
-      margin: 0;
-      padding: 0;
-      background-color: #f2f2f2;
-    }
 
-    .container {
-      max-width: 800px;
-      margin: 0 auto;
-      padding: 20px;
-    }
-
-    h1 {
-      text-align: center;
-      margin-bottom: 30px;
-    }
-
-    .button {
-      display: inline-block;
-      background-color: #4CAF50;
-      color: #fff;
-      padding: 10px 20px;
-      text-decoration: none;
-      border-radius: 4px;
-    }
-  </style> -->
 </head>
 <body>
 <!-- Common Header to all pages -->

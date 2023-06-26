@@ -7,73 +7,7 @@
 <head>
   <title>New Review Creator</title>
   <link rel="stylesheet" href="style.css" >
-<!-- <style>
-     body {
-      font-family: Arial, sans-serif;
-      margin: 0;
-      padding: 0;
-      background-color: #f2f2f2;
-    }
-    .review {
-        border: 1px solid black;
-        padding: 10px;
-        width: 800px;
-        background-color: #FFFFFF;
-    }
 
-    .business_ID {
-        border: 1px solid black;
-        padding: 5px;
-    }
-
-    .date {
-        border: 1px solid black;
-        padding: 5px;
-    }
-
-    .FoodRating {
-        border: 1px solid black;
-        padding: 5px;
-    }
-    .ServiceRating {
-        border: 1px solid black;
-        padding: 5px;
-    }
-
-    .AtmosphereRating {
-        border: 1px solid black;
-        padding: 5px;
-    }
-
-    .PriceRating {
-        border: 1px solid black;
-        padding: 5px;
-    }
-
-    .Content {
-        border: 1px solid black;
-        padding: 5px;
-    }
-    .OverallRating {
-        border: 1px solid black;
-        padding: 5px;
-    }
-
-    .user_ID {
-        border: 1px solid black;
-        padding: 5px;
-    }
-
-    .UsefulCount {
-        border: 1px solid black;
-        padding: 5px;
-    }
-
-    .image {
-        border: 1px solid black;
-        padding: 5px;
-    }
-</style> -->
 </head>
 <body>
 <%
@@ -90,8 +24,6 @@ business = businessDao.readBusiness(businessId);
 
 <h1>Create a new review! for <%out.print(business.getName());%> (CST8288)</h1>
 
-
-<a href="newReviewForm.jsp?id=<%out.print(business.getId());%>" class="btn">Review this Restaurant!</a>
 
   <div class="review">
   <form action = "createNewReview.jsp" method = "POST">

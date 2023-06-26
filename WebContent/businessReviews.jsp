@@ -10,34 +10,7 @@
 <meta charset="ISO-8859-1">
 <title>Business Reviews viewer</title>
 <link rel="stylesheet" href="style.css" >
-<!-- <style>
-body {
-	font-family: Arial, sans-serif;
-	margin: 0;
-	padding: 0;
-	background-color: #f2f2f2;
-}
 
-.container {
-	max-width: 800px;
-	margin: 0 auto;
-	padding: 20px;
-}
-
-h1 {
-	text-align: center;
-	margin-bottom: 30px;
-}
-
-.button {
-	display: inline-block;
-	background-color: #4CAF50;
-	color: #fff;
-	padding: 10px 20px;
-	text-decoration: none;
-	border-radius: 4px;
-}
-</style> -->
 </head>
 <body>
 
@@ -67,10 +40,23 @@ if (session.getAttribute("authenticated") != null){
 	 authenticated = (boolean) session.getAttribute("authenticated");
 }
 %>
+
 	<h1>
 		<%out.print(business.getName());%>
 	</h1>
+	<div class="businessInfo">
 	<table>
+	<tr>
+	<td></td>
+	<td></td>
+	<td>
+		<% // only show button to create new review to authenticated users. 
+		if (authenticated){ %>
+			<a href="newReviewForm.jsp?businessId=<%out.print(business.getId());%>" class="button">Review this Restaurant!</a>	
+		<%}%>
+		
+	</td>
+	</tr>	
 		<tr>
 			<td>
 			<br> Overall Rating <%out.print(business.getOverallRating()); %> / 5 
@@ -84,24 +70,24 @@ if (session.getAttribute("authenticated") != null){
 				<%out.print(business.getDescription());%>	
 			<td>
 			</tr>
-			
+	
 		<tr>
 		<tr></tr>
 		
 		<tr>
-		<td>
-		<% // only show button to create new review to authenticated users. 
-		if (authenticated){ %>
-			<a href="newReviewForm.jsp?businessId=<%out.print(business.getId());%>" class="btn">Review this Restaurant!</a>	
-		<%}%>
 		
-		</td>
+		
 		</tr>
+	</table>
+</div>
+	<div class="businessInfo">
+	<table>
 		
 		<tr>
-		<td>
-		Reviews:
-		</td>
+		<td></td>
+		<th>
+		Reviews
+		</th>
 		</tr>	
 		<% for (Review review : reviewList) { %>
 		<tr>
@@ -123,7 +109,7 @@ if (session.getAttribute("authenticated") != null){
 		</td>
 		<td>
 		<%out.print(review.getUsefulCount() + " Other users found this reivew helpful <br> Was this review Helpful?");%>
-		<a href="updateUsefulCount.jsp?reviewId=<%out.print(review.getID());%>&businessId=<%out.print(business.getId());%>" class="btn">Yes</a>
+		<a href="updateUsefulCount.jsp?reviewId=<%out.print(review.getID());%>&businessId=<%out.print(business.getId());%>" class="button">Yes</a>
 		</td>
 			
 		</tr>
@@ -135,7 +121,7 @@ if (session.getAttribute("authenticated") != null){
 
 
 	</table>
-
+</div>
 
 
 </body>

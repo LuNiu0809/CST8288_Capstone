@@ -5,31 +5,7 @@
 <head>
   <title>Log In Page</title>
   <link rel="stylesheet" href="style.css" >
-<!-- <style>
-     body {
-      font-family: Arial, sans-serif;
-      margin: 0;
-      padding: 0;
-      background-color: #f2f2f2;
-    }
-    .login {
-        border: 1px solid black;
-        padding: 10px;
-        width: 800px;
-        background-color: #FFFFFF;
-    }
-    .button {
-      display: inline-block;
-      background-color: #4CAF50;
-      color: #fff;
-      padding: 10px 20px;
-      text-decoration: none;
-      border-radius: 4px;
-    }
 
-  
-    
-</style> -->
 </head>
 <body>
 <!-- Common Header to all pages -->

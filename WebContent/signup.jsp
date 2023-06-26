@@ -5,23 +5,7 @@
 <head>
   <title>Sign Up Page</title>
   <link rel="stylesheet" href="style.css" >
-<!-- <style>
-     body {
-      font-family: Arial, sans-serif;
-      margin: 0;
-      padding: 0;
-      background-color: #f2f2f2;
-    }
-    .details {
-        border: 1px solid black;
-        padding: 10px;
-        width: 800px;
-        background-color: #FFFFFF;
-    }
 
-  
-    }
-</style> -->
 </head>
 <body>
 <!-- Common Header to all pages -->
