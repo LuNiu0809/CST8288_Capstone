@@ -241,24 +241,12 @@ public class Review {
 	public void setUsefulCount(int count) {
 		usefulCount = count;
 	}
-	
-	/**
-	 * Posts this review, creates creationDate the time stamp 
-	 */
-	public void post() {
-		generateCreationDate();
-		
-		// TODO: Add post into Database. 
-		
-		
-		// TODO: Get post ID from Database. 
-		
-	}
+
 	
 	/**
 	 * generates the creation date for this review. 
 	 */
-	private void generateCreationDate() {
+	public void generateCreationDate() {
 		
 		// Timestamp source https://mkyong.com/java/how-to-get-current-timestamps-in-java/
 		Date tsDate = new Date();

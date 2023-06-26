@@ -43,7 +43,7 @@ h1 {
 	<%
 Business business = new Business(); 
 BusinessDao businessDao = new BusinessDao();
-int businessId = Integer.valueOf(request.getParameter("id"));
+int businessId = Integer.valueOf(request.getParameter("businessId"));
 
 
 business = businessDao.readBusiness(businessId);
@@ -75,10 +75,17 @@ reviewList = reviewDao.readNumReviews(businessId, 5);
 			
 		<tr>
 		<tr></tr>
+		
+		<tr>
+		<td>
+		<a href="newReviewForm.jsp?businessId=<%out.print(business.getId());%>" class="btn">Review this Restaurant!</a>
+		</td>
+		</tr>
+		
+		<tr>
 		<td>
 		Reviews:
 		</td>
-	
 		</tr>	
 		<%
 		for (Review review : reviewList) {

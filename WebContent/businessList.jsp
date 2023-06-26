@@ -79,7 +79,7 @@
 			<td>
 		
 
-			<a href="businessReviews.jsp?id=<%out.print(business.getId());%>" class="btn">See Reviews</a>
+			<a href="businessReviews.jsp?businessId=<%out.print(business.getId());%>" class="btn">See Reviews</a>
 			
 
 			<td>
