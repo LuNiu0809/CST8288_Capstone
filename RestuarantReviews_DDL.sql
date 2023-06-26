@@ -108,6 +108,18 @@ VALUES (2, 'JaneDoe123', 'password', 'janeDoe123@gmail.com', 'Doe', 'Jane', 'Con
 INSERT INTO user (ID, UserName, Password, Email, LastName, FirstName, RoleName, AccountVerified)
 VALUES (3, 'JohnDoe456', 'password', 'johnDoe456@gmail.com', 'Doe', 'John', 'Contributor', 1);
 
+INSERT INTO user (ID, UserName, Password, Email, LastName, FirstName, RoleName, AccountVerified)
+VALUES (4, 'JaneDoe123', 'password', 'janeDoe123@gmail.com', 'Doe', 'Jane', 'Contributor', 1);
+
+INSERT INTO user (ID, UserName, Password, Email, LastName, FirstName, RoleName, AccountVerified)
+VALUES (5, 'JaneDoe456', 'password', 'JaneDoe456@gmail.com', 'Doe', 'Jane', 'Contributor', 1);
+
+INSERT INTO user (ID, UserName, Password, Email, LastName, FirstName, RoleName, AccountVerified)
+VALUES (6, 'user6', 'password', 'user6@gmail.com', '6', 'user', 'Contributor', 1);
+
+INSERT INTO user (ID, UserName, Password, Email, LastName, FirstName, RoleName, AccountVerified)
+VALUES (7, 'user7', 'password', 'user7@gmail.com', '7', 'user', 'Contributor', 1);
+
 
 
 -- -----------------------------------------------------
@@ -137,10 +149,22 @@ VALUES(6, 'Dive Bar', '146 Back Alley Street, Ottawa ON', 'Dive Bar Description'
 -- Insert sample data into review table. 
 -- -----------------------------------------------------
 INSERT INTO review (ID, user_ID, business_ID, Date, Content, PriceRating, OverallRating, FoodRating, ServiceRating, AtmosphereRating, UsefulCount)
-VALUES(1, 1, 1, NOW(), 'Good Review Content', 2, 4, 4, 4, 4, 1);
+VALUES(1, 2, 1, NOW(), 'Great Steak!', 2, 4, 4, 4, 4, 1);
 
 INSERT INTO review (ID, user_ID, business_ID, Date, Content, PriceRating, OverallRating, FoodRating, ServiceRating, AtmosphereRating, UsefulCount)
-VALUES(2, 2, 2, NOW(), 'Great Breakfast!', 1, 5, 5, 5, 5, 2);
+VALUES(2, 3, 2, NOW(), 'Great Breakfast!', 1, 5, 5, 5, 5, 2);
+
+INSERT INTO review (ID, user_ID, business_ID, Date, Content, PriceRating, OverallRating, FoodRating, ServiceRating, AtmosphereRating, UsefulCount)
+VALUES(3, 4, 3, NOW(), 'Standard Pub grub.', 1, 3, 3, 3, 3, 1);
+
+INSERT INTO review (ID, user_ID, business_ID, Date, Content, PriceRating, OverallRating, FoodRating, ServiceRating, AtmosphereRating, UsefulCount)
+VALUES(4, 5, 4, NOW(), 'Amazing', 4, 5, 5, 5, 5, 6);
+
+INSERT INTO review (ID, user_ID, business_ID, Date, Content, PriceRating, OverallRating, FoodRating, ServiceRating, AtmosphereRating, UsefulCount)
+VALUES(5, 6, 5, NOW(), 'Great Beer!', 2, 4, 4, 4, 4, 3);
+
+INSERT INTO review (ID, user_ID, business_ID, Date, Content, PriceRating, OverallRating, FoodRating, ServiceRating, AtmosphereRating, UsefulCount)
+VALUES(6, 7, 6, NOW(), 'Standard dive bar', 1, 2, 2, 2, 2, 0);
 
 
 

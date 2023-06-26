@@ -203,6 +203,46 @@ class BusinessDaoTester {
 	
 	}
 	
+	/**
+	 * Test that a business updating its ratings.  
+	 */
+	@Test
+	void testUpdateBusinessRatings() {
+		
+
+		testBusiness.setAddress("test update address");
+		testBusiness.setDescription("test update Description");
+		testBusiness.setEmail("test update email");
+		testBusiness.setFoodType("Test update Food type");
+		testBusiness.setHoursOfOperation("Test update hours of operation");
+		testBusiness.setName("Test update Name");
+		testBusiness.setOverallRating(5);
+		testBusiness.setPhoneNumber("Test update Phone Number");
+		testBusiness.setPriceRating(5);	
+		
+		testBusinessDao.createBusiness(testBusiness);
+		
+		int updateID = testBusinessDao.getlastBusinessID();
+		
+		
+		try {
+			
+			Business testUpdateBusiness = new Business();
+			testUpdateBusiness = testBusinessDao.readBusiness(updateID);
+			//testUpdateBusiness.printBusinessToConsole();			
+			
+			assertNotEquals(0, testBusinessDao.updateRatings(updateID, 3, 3));		
+			testUpdateBusiness = testBusinessDao.readBusiness(updateID);
+			//testUpdateBusiness.printBusinessToConsole();
+			
+			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	
+	}
+	
 	
 	
 	

@@ -65,7 +65,7 @@ public class ReviewDao {
 	 * Reads the request number of reviews for a business.
 	 * @param businessID the id of the business to get reviews for
 	 * @param numReviews the number of reviews to return for the business
-	 * @return the top 5 reviews for the requested business
+	 * @return the number of reviews for the requested business
 	 * @throws SQLException 
 	 */
 	public synchronized ArrayList<Review> readNumReviews(int businessID, int numReviews) throws SQLException{
@@ -88,6 +88,90 @@ public class ReviewDao {
 					
 			readReview.setInt(1, businessID);
 			readReview.setInt(2, numReviews);
+			
+			rs = readReview.executeQuery();
+			
+			ArrayList<Review> reviewList = new ArrayList<>();
+			int id = 0;
+			int user_ID = 0;
+			int business_ID = 0;
+			Date date = null;
+			String content = "";
+			int priceRating = 0;
+			int overallRating = 0;
+			int foodRating = 0;
+			int serviceRating = 0;
+			int atmosphereRating = 0;
+			int usefulCount = 0;
+
+			while (rs.next()) {
+
+				id = rs.getInt("id");
+				user_ID = rs.getInt("user_ID");
+				business_ID = rs.getInt("business_ID");			 			
+				date = rs.getDate("Date");
+				content = rs.getString("Content");
+				priceRating = rs.getInt("PriceRating");
+				overallRating = rs.getInt("OverallRating");
+				foodRating = rs.getInt("FoodRating");
+				serviceRating = rs.getInt("ServiceRating");
+				atmosphereRating = rs.getInt("AtmosphereRating");
+				usefulCount = rs.getInt("UsefulCount"); 
+
+				Review review = new Review();
+
+				review.setID(id);
+				review.setAuthorID(user_ID);
+				review.setBusinessID(business_ID);
+				review.setCreationDate(date);				
+				review.setContent(content);
+				review.setPriceRating(priceRating); 
+				review.setOverallRating(overallRating);
+				review.setFoodRating(foodRating);
+				review.setServiceRating(serviceRating);
+				review.setAtmosphereRating(atmosphereRating);
+				review.setUsefulCount(usefulCount);
+
+
+				reviewList.add(review);
+
+			}		
+			return reviewList;					
+			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			
+			rs.close();
+		}
+		
+		return null;
+	}
+	
+	/**
+	 * Reads all reviews for a business
+	 * @param businessID the id of the business to read the reviews for 
+	 * @return the reviews for that business
+	 * @throws SQLException
+	 */
+	public synchronized ArrayList<Review> readAllReviews(int businessID) throws SQLException{
+		
+		ResultSet rs = null;
+
+		try (
+				// Create DB Connection
+				Connection connection = DBConnection.getConnectionToDatabase();	
+				
+				// Create select statement 
+				PreparedStatement readReview = connection.prepareStatement(
+						"SELECT id, user_ID, business_ID, Date, Content, PriceRating, OverallRating, FoodRating, ServiceRating, AtmosphereRating, UsefulCount"						
+								+ " FROM review "
+								+ " WHERE business_ID = ?" 		
+						);
+				) {
+					
+			readReview.setInt(1, businessID);
 			
 			rs = readReview.executeQuery();
 			

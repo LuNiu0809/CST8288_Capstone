@@ -3,6 +3,8 @@
  */
 package com.algonquin.Capstone.beans;
 
+import java.util.ArrayList;
+
 /**
  * Describes a business
  */
@@ -170,6 +172,31 @@ public class Business {
 	 */
 	public void setHoursOfOperation(String hoursOfOperation) {
 		this.hoursOfOperation = hoursOfOperation;
+	}
+	
+	/**
+	 * Takes the list of all reviews for a business and calculates the new price and overall ratings. 
+	 * @param reviewList
+	 */
+	public void calculateRatings(ArrayList <Review> reviewList) {
+		int priceRatingAvg = 0;
+		int overallRatingAvg = 0;
+		int totalReviews = 0;
+		
+		if (reviewList.size() > 0) {
+			for (Review review : reviewList) {
+				priceRatingAvg += review.getPriceRating();
+				overallRatingAvg += review.getOverallRating();
+				totalReviews ++;
+			}
+			
+			int newPriceRating = (priceRatingAvg / totalReviews);
+			this.priceRating.setRating(newPriceRating);
+			
+			int newOverallRating = (overallRatingAvg / totalReviews);
+			this.overallRating.setRating(newOverallRating);
+		}
+					
 	}
 	
 	/**

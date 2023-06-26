@@ -243,6 +243,36 @@ public class BusinessDao {
 	}
 	
 	/**
+	 * Updates the Price and Overall Ratings for a business
+	 * @param businessID the business to be updated
+	 * @param newPriceRating the new price rating 
+	 * @param newOverallRating the new overall rating 
+	 * @return returns the number of rows updated, or 0 if the update failed. 
+	 */
+	public synchronized int updateRatings(int businessID, int newPriceRating, int newOverallRating) {
+		
+    	try (
+    			// Create DB Connection
+    			Connection connection = DBConnection.getConnectionToDatabase();	
+    			// Create update statement 
+    			PreparedStatement updateBusiness = connection.prepareStatement(
+    					"UPDATE business "
+    					+ "set PriceRating=?, OverallRating=? "
+    					+ "WHERE ID=?");
+    			){
+    		updateBusiness.setInt(1, newPriceRating);
+    		updateBusiness.setInt(2, newOverallRating);
+    		updateBusiness.setInt(3, businessID);
+			return updateBusiness.executeUpdate();		
+			
+		} catch (SQLException e) {		
+			e.printStackTrace();	
+			return 0;
+		} 
+		
+	}
+	
+	/**
 	 *  Deletes the selected business based on the provided ID. 
 	 * @param businessID the ID of the business to delete. 
 	 * @return returns the number of rows deleted or 0 if the delete was not successful. 
