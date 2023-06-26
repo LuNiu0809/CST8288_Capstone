@@ -25,36 +25,34 @@
 <body>
 <a href="home.jsp" class="btn">Home</a>
 <h1>New Member Signup! (CST8288)</h1>
-  <div class="details">
-    <table>
-			<tr>
-				<td>First Name:</td>
-				<td><input type="text" title="txtFirstName"></td>
-			</tr>
-			<tr>
-				<td>Last Name:</td>
-				<td><input type="text" title="txtLastName"></td>
-			</tr>
-			<tr>
-				<td>Role?:</td>
-				<td><input type="text" title="txtRole"></td>
-			</tr>
-			<tr>
-				<td>User Name:</td>
-				<td><input type="text" title="txtUName"></td>
-			</tr>
-			<tr>
-				<td>Password:</td>
-				<td><input type="text" title="txtPassword"></td>
-			</tr>
-			<tr>
-				<td>Re-enter Password:</td>
-				<td><input type="text" title="txtPasswordCheck"></td>
-			</tr>
-			<tr>
-				<td><input type="submit" value="submit"></td>
-				<tr>
-		</table>
-		</div>
+ <div class="details">
+    <h1>User Registration</h1>
+    
+    <form action="register" method="post">
+        <div>
+            <label for="username">Username:</label>
+            <input type="text" id="username" name="username" required>
+        </div>
+        <div>
+            <label for="password">Password:</label>
+            <input type="password" id="password" name="password" required>
+        </div>
+        <div>
+            <label for="email">Email:</label>
+            <input type="email" id="email" name="email" required>
+        </div>
+        <div>
+            <label for="firstName">First Name:</label>
+            <input type="text" id="firstName" name="firstName" required>
+        </div>
+        <div>
+            <label for="lastName">Last Name:</label>
+            <input type="text" id="lastName" name="lastName" required>
+        </div>
+        <div>
+            <input type="submit" value="Sign Up">
+        </div>
+    </form>
+</div>
 </body>
 </html>
