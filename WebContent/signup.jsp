@@ -4,7 +4,8 @@
 <html>
 <head>
   <title>Sign Up Page</title>
-<style>
+  <link rel="stylesheet" href="style.css" >
+<!-- <style>
      body {
       font-family: Arial, sans-serif;
       margin: 0;
@@ -20,10 +21,12 @@
 
   
     }
-</style>
+</style> -->
 </head>
 <body>
-<a href="home.jsp" class="btn">Home</a>
+<!-- Common Header to all pages -->
+<%@include file="header.jsp"%>
+
 <h1>New Member Signup! (CST8288)</h1>
  <div class="details">
     <h1>User Registration</h1>
