@@ -6,6 +6,8 @@
 <body>
 <a href="home.jsp" class="button">Home</a>
 <a href="businessList.jsp" class="button">Explore Restaurants!</a>
+<a href="login.jsp" class="button">Login</a>
+<a href="signup.jsp" class="button">Register</a>
 
 
 <%
@@ -15,7 +17,10 @@ String username = "";
 
 if (session.getAttribute("username") != null){
 	 username = session.getAttribute("username").toString();
-}
+} %>
+<div class="currentUser">
+
+<%
 
 if (session.getAttribute("authenticated") != null){
 	boolean authenticated = (boolean) session.getAttribute("authenticated");
@@ -28,5 +33,6 @@ if (session.getAttribute("authenticated") != null){
 	out.print("Current User: Guest");
 }
 %>
+</div>
 </body>
 </html>
