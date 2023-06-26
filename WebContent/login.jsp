@@ -32,22 +32,32 @@
 </head>
 <body>
 <a href="home.jsp" class="btn">Home</a>
+
 <h1>Member Login Page! (CST8288)</h1>
-  <div class="login">
-    <table>
-			<tr>
-				<td>User Name:</td>
-				<td><input type="text" title="txtUName"></td>
-			</tr>
-			<tr>
-				<td>Password:</td>
-				<td><input type="text" title="txtPassword"></td>
-			</tr>
-		</table>
-		<p>
+ <div class="login">
+    
+    <% String error = request.getParameter("error");
+       if (error != null && error.equals("1")) { %>
+       <p style="color: red;">Invalid username or password!</p>
+    <% } %>
+    <form action="login" method="post">
+        <div>
+            <label for="username">Username:</label>
+            <input type="text" id="username" name="username" required>
+        </div>
+        <div>
+            <label for="password">Password:</label>
+            <input type="password" id="password" name="password" required>
+        </div>
+        <div>
+            <button type="submit">Login</button>
+        </div>
+    </form>
+    
+	<p>
       <a class="button">Submit</a>
       <a href="signup.jsp" class="button">New Member?</a>
     </p>
-		</div>
+</div>
 </body>
 </html>
