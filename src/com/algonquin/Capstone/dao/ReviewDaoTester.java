@@ -40,7 +40,7 @@ class ReviewDaoTester {
 		testReview.setFoodRating(2);
 		testReview.setServiceRating(3);
 		testReview.setPriceRating(4); 
-		testReview.post();
+		testReview.generateCreationDate();
 		
 		assertEquals(1, reviewDao.createReview(testReview));  
 		
@@ -62,7 +62,7 @@ class ReviewDaoTester {
 		testReview.setFoodRating(1);
 		testReview.setServiceRating(1);
 		testReview.setPriceRating(1); 
-		testReview.post();
+		testReview.generateCreationDate();
 		reviewDao.createReview(testReview);
 		
 		testReview.setAuthorID(1);
@@ -72,7 +72,7 @@ class ReviewDaoTester {
 		testReview.setFoodRating(2);
 		testReview.setServiceRating(2);
 		testReview.setPriceRating(2); 
-		testReview.post();
+		testReview.generateCreationDate();
 		reviewDao.createReview(testReview);
 		
 		testReview.setAuthorID(1);
@@ -82,7 +82,7 @@ class ReviewDaoTester {
 		testReview.setFoodRating(3);
 		testReview.setServiceRating(3);
 		testReview.setPriceRating(3); 
-		testReview.post();
+		testReview.generateCreationDate();
 		reviewDao.createReview(testReview);
 		
 		testReview.setAuthorID(1);
@@ -92,7 +92,7 @@ class ReviewDaoTester {
 		testReview.setFoodRating(4);
 		testReview.setServiceRating(4);
 		testReview.setPriceRating(4); 
-		testReview.post();
+		testReview.generateCreationDate();
 		reviewDao.createReview(testReview);
 		
 		testReview.setAuthorID(1);
@@ -102,7 +102,7 @@ class ReviewDaoTester {
 		testReview.setFoodRating(5);
 		testReview.setServiceRating(5);
 		testReview.setPriceRating(5); 
-		testReview.post();
+		testReview.generateCreationDate();
 		reviewDao.createReview(testReview);
 		
 		
@@ -137,7 +137,7 @@ class ReviewDaoTester {
 		testReview.setFoodRating(5);
 		testReview.setServiceRating(5);
 		testReview.setPriceRating(5); 
-		testReview.post();
+		testReview.generateCreationDate();
 		
 		reviewDao.createReview(testReview);
 		
@@ -167,7 +167,7 @@ class ReviewDaoTester {
 		testReview.setFoodRating(5);
 		testReview.setServiceRating(5);
 		testReview.setPriceRating(5); 
-		testReview.post();
+		testReview.generateCreationDate();
 		reviewDao.createReview(testReview);
 		int deleteID = reviewDao.getlastReviewID();
 		
@@ -198,7 +198,7 @@ class ReviewDaoTester {
 		testReview.setFoodRating(5);
 		testReview.setServiceRating(5);
 		testReview.setPriceRating(5); 
-		testReview.post();
+		testReview.generateCreationDate();
 		reviewDao.createReview(testReview);
 		int updateID = reviewDao.getlastReviewID();
 		
