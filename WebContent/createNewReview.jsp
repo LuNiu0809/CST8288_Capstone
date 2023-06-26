@@ -3,6 +3,7 @@
     <%@page import="java.lang.String"%>
     <%@page import="com.algonquin.Capstone.beans.*"%>
 	<%@page import="com.algonquin.Capstone.dao.*"%>
+	<%@page import="java.util.ArrayList"%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -25,11 +26,11 @@ ReviewDao reviewDao = new ReviewDao();
 
 //Create a new session
 session = request.getSession(true);
-//String username = "";
+String currentUsername = "";
 boolean authenticated = false;
 
 if (session.getAttribute("username") != null){
-	 username = session.getAttribute("username").toString();
+	currentUsername = session.getAttribute("username").toString();
 }
 if (session.getAttribute("authenticated") != null)	{
 	authenticated = (boolean) session.getAttribute("authenticated");
@@ -39,7 +40,7 @@ if (session.getAttribute("authenticated") != null)	{
 // Get user name from current session. 
 User user = new User();
 UserDao userDao = new UserDao();
-user = userDao.getUserByUsername(username);
+user = userDao.getUserByUsername(currentUsername);
 
 // get review information from post.
 int foodRating = Integer.valueOf(request.getParameter("foodRating"));
@@ -66,8 +67,23 @@ int createStatus = reviewDao.createReview(review);
 
 if (createStatus > 0){
 	
-	RequestDispatcher rd = request.getRequestDispatcher("businessReviews.jsp?");
-	rd.forward(request, response);
+	// When review is added, calculate the new ratings for the business
+	ArrayList <Review> reviewList = new ArrayList<>();
+	reviewList = reviewDao.readAllReviews(businessId);
+			
+	business.calculateRatings(reviewList);
+	
+	// Update the business ratings in the database. 
+	int newPriceRating = business.getPriceRating();
+	int newOverallRating = business.getOverallRating();
+	int businessUpdateStatus = businessDao.updateRatings(businessId, newPriceRating, newOverallRating);
+	
+	if (businessUpdateStatus > 0){
+		RequestDispatcher rd = request.getRequestDispatcher("businessReviews.jsp?");
+		rd.forward(request, response);
+	}
+		
+	
 } else {
 	out.print("Error Creating Review!");
 }
