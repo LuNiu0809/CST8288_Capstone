@@ -87,9 +87,7 @@ reviewList = reviewDao.readNumReviews(businessId, 5);
 		Reviews:
 		</td>
 		</tr>	
-		<%
-		for (Review review : reviewList) {
-		%>
+		<% for (Review review : reviewList) { %>
 		<tr>
 		<td>
 		<%// TODO: Username %>
@@ -104,6 +102,7 @@ reviewList = reviewDao.readNumReviews(businessId, 5);
 		</td>
 		<td>
 		<%out.print(review.getUsefulCount() + " Other users found this reivew helpful <br> Was this review Helpful?");%>
+		<a href="updateUsefulCount.jsp?reviewId=<%out.print(review.getID());%>&businessId=<%out.print(business.getId());%>" class="btn">Yes</a>
 		</td>
 			
 		</tr>
@@ -111,9 +110,7 @@ reviewList = reviewDao.readNumReviews(businessId, 5);
 
 		<tr></tr>
 
-		<%
-		}
-		%>
+		<% } %>
 
 
 	</table>

@@ -27,6 +27,7 @@ int atmosphereRating = Integer.valueOf(request.getParameter("atmosphereRating"))
 int priceRating = Integer.valueOf(request.getParameter("priceRating"));
 String content = request.getParameter("content");
 
+// TODO: add correct user ID
 int userId = 2; // temp until user code is inplace. 
 
 review.setAuthorID(userId);
