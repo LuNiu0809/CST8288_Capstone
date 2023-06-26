@@ -6,7 +6,8 @@
 <html>
 <head>
   <title>New Review Creator</title>
-<style>
+  <link rel="stylesheet" href="style.css" >
+<!-- <style>
      body {
       font-family: Arial, sans-serif;
       margin: 0;
@@ -72,7 +73,7 @@
         border: 1px solid black;
         padding: 5px;
     }
-</style>
+</style> -->
 </head>
 <body>
 <%
@@ -84,7 +85,9 @@ business = businessDao.readBusiness(businessId);
 
 %>
 
-<a href="home.jsp" class="btn">Home</a>
+<!-- Common Header to all pages -->
+<%@include file="header.jsp"%>
+
 <h1>Create a new review! for <%out.print(business.getName());%> (CST8288)</h1>
 
 

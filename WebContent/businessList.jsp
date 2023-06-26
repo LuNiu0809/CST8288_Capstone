@@ -1,6 +1,6 @@
 <%@page import="java.io.BufferedInputStream"%>
-<%@ page language="java" contentType="text/html; charset=ISO-8859-1"
-    pageEncoding="ISO-8859-1"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <%@page import="com.algonquin.Capstone.beans.*" %>
 <%@page import="com.algonquin.Capstone.dao.*" %>
@@ -10,9 +10,10 @@
 <html>
 <head>
 <meta charset="ISO-8859-1">
-<title>Business Viewer</title>
 
-<style>
+<title>Business Viewer</title>
+<link rel="stylesheet" href="style.css" >
+<!-- <style>
     body {
       font-family: Arial, sans-serif;
       margin: 0;
@@ -40,19 +41,23 @@
       border-radius: 4px;
     }
      
-</style>
+</style> -->
 </head>
 <body>
-<a href="home.jsp" class="btn">Home</a>
+<!-- Common Header to all pages -->
+<%@include file="header.jsp"%>
+
 <h1>Check out these local Restaurants! (CST8288)</h1>
   <div class="Businesslist">
 		<table>
 			<%
 			ArrayList<Business> businessList = new ArrayList<>();
-			BusinessDao businessDao = new BusinessDao();
-			businessList = businessDao.readNumBusiness(5);
+				BusinessDao businessDao = new BusinessDao();
+				businessList = businessDao.readNumBusiness(5);
 
-			for (Business business : businessList) {
+				for (Business business : businessList) {
+				
+				
 			%>
 			<tr>
 			<td>

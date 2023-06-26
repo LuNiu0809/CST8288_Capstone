@@ -41,7 +41,7 @@ public class ReviewDao {
 			
 			// Source for converting to sql date 
 			// https://stackoverflow.com/questions/16645724/how-to-insert-date-into-mysql-database-table-in-java
-			newReview.setDate(3, new java.sql.Date(review.getCreationDate().getTime()));
+			newReview.setTimestamp(3, new java.sql.Timestamp(review.getCreationDate().getTime()));
 			newReview.setString(4, review.getContent());
 			newReview.setInt(5, review.getPriceRating());
 			newReview.setInt(6, review.getOverallRating());
@@ -81,6 +81,7 @@ public class ReviewDao {
 						"SELECT id, user_ID, business_ID, Date, Content, PriceRating, OverallRating, FoodRating, ServiceRating, AtmosphereRating, UsefulCount"						
 								+ " FROM review "
 								+ " WHERE business_ID = ?" 
+								+ " ORDER BY Date DESC"
 								+ " LIMIT ?;"		
 						);
 				) {

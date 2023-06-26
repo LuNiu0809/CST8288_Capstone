@@ -13,7 +13,10 @@ import javax.servlet.http.HttpSession;
 import com.algonquin.Capstone.beans.User;
 import com.algonquin.Capstone.service.UserService;
 
-@WebServlet("/")
+//@WebServlet("/")
+
+
+@WebServlet(name = "userServlet", urlPatterns = {"/login", "/register", "/logout"} )
 public class UserServelt extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;
@@ -58,7 +61,7 @@ public class UserServelt extends HttpServlet {
 			session.setAttribute("username", username);
 			session.setAttribute("authenticated", true);
 
-			RequestDispatcher dispatcher = request.getRequestDispatcher("reviewlist.jsp");
+			RequestDispatcher dispatcher = request.getRequestDispatcher("businessList.jsp");
 			dispatcher.forward(request, response);
 
 		} else {

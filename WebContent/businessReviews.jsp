@@ -1,5 +1,5 @@
-<%@ page language="java" contentType="text/html; charset=ISO-8859-1"
-	pageEncoding="ISO-8859-1"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
 <%@page import="java.lang.String"%>
 <%@page import="com.algonquin.Capstone.beans.*"%>
 <%@page import="com.algonquin.Capstone.dao.*"%>
@@ -9,7 +9,8 @@
 <head>
 <meta charset="ISO-8859-1">
 <title>Business Reviews viewer</title>
-<style>
+<link rel="stylesheet" href="style.css" >
+<!-- <style>
 body {
 	font-family: Arial, sans-serif;
 	margin: 0;
@@ -36,7 +37,7 @@ h1 {
 	text-decoration: none;
 	border-radius: 4px;
 }
-</style>
+</style> -->
 </head>
 <body>
 
@@ -52,9 +53,20 @@ ArrayList<Review> reviewList = new ArrayList<>();
 ReviewDao reviewDao = new ReviewDao();
 reviewList = reviewDao.readNumReviews(businessId, 5);
 
+UserDao userDao = new UserDao();
+
 %>
 
-	<a href="home.jsp" class="btn">Home</a>
+<!-- Common Header to all pages -->
+<%@include file="header.jsp"%>
+<%
+//Create a new session
+session = request.getSession(true);
+Boolean authenticated = false;
+if (session.getAttribute("authenticated") != null){
+	 authenticated = (boolean) session.getAttribute("authenticated");
+}
+%>
 	<h1>
 		<%out.print(business.getName());%>
 	</h1>
@@ -78,7 +90,11 @@ reviewList = reviewDao.readNumReviews(businessId, 5);
 		
 		<tr>
 		<td>
-		<a href="newReviewForm.jsp?businessId=<%out.print(business.getId());%>" class="btn">Review this Restaurant!</a>
+		<% // only show button to create new review to authenticated users. 
+		if (authenticated){ %>
+			<a href="newReviewForm.jsp?businessId=<%out.print(business.getId());%>" class="btn">Review this Restaurant!</a>	
+		<%}%>
+		
 		</td>
 		</tr>
 		
@@ -90,7 +106,12 @@ reviewList = reviewDao.readNumReviews(businessId, 5);
 		<% for (Review review : reviewList) { %>
 		<tr>
 		<td>
-		<%// TODO: Username %>
+		
+		<%
+		User reviewAuthor = new User();
+		reviewAuthor = userDao.getUserById(review.getAuthorID());
+		out.print( "Author: " + reviewAuthor.getUserName() + " Posted :" + review.getCreationDate());
+		 %>
 		<br> Overall: <%out.print(review.getOverallRating()); %>  / 5
 		<br> Price: <%out.print(review.getPriceRating()); %>  / 5
 		<br> Food:  <%out.print(review.getFoodRating()); %>  / 5

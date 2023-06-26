@@ -1,5 +1,5 @@
-<%@ page language="java" contentType="text/html; charset=ISO-8859-1"
-    pageEncoding="ISO-8859-1"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
     <%@page import="java.lang.String"%>
     <%@page import="com.algonquin.Capstone.beans.*"%>
 	<%@page import="com.algonquin.Capstone.dao.*"%>
@@ -8,10 +8,12 @@
 <head>
 <meta charset="ISO-8859-1">
 <title>New Review Creation Status</title>
+<link rel="stylesheet" href="style.css" >
 </head>
 
 <body>
-<a href="home.jsp" class="btn">Home</a>
+<!-- Common Header to all pages -->
+<%@include file="header.jsp"%>
 <%
 Business business = new Business(); 
 BusinessDao businessDao = new BusinessDao();
@@ -21,14 +23,33 @@ business = businessDao.readBusiness(businessId);
 Review review = new Review();
 ReviewDao reviewDao = new ReviewDao();
 
+//Create a new session
+session = request.getSession(true);
+//String username = "";
+boolean authenticated = false;
+
+if (session.getAttribute("username") != null){
+	 username = session.getAttribute("username").toString();
+}
+if (session.getAttribute("authenticated") != null)	{
+	authenticated = (boolean) session.getAttribute("authenticated");
+	
+} 
+
+// Get user name from current session. 
+User user = new User();
+UserDao userDao = new UserDao();
+user = userDao.getUserByUsername(username);
+
+// get review information from post.
 int foodRating = Integer.valueOf(request.getParameter("foodRating"));
 int serviceRating = Integer.valueOf(request.getParameter("serviceRating"));
 int atmosphereRating = Integer.valueOf(request.getParameter("atmosphereRating"));
 int priceRating = Integer.valueOf(request.getParameter("priceRating"));
 String content = request.getParameter("content");
 
-// TODO: add correct user ID
-int userId = 2; // temp until user code is inplace. 
+
+int userId = user.getId(); 
 
 review.setAuthorID(userId);
 review.setBusinessID(businessId);
@@ -44,7 +65,9 @@ int createStatus = reviewDao.createReview(review);
 
 
 if (createStatus > 0){
-	out.print("Review successfully created!");
+	
+	RequestDispatcher rd = request.getRequestDispatcher("businessReviews.jsp?");
+	rd.forward(request, response);
 } else {
 	out.print("Error Creating Review!");
 }

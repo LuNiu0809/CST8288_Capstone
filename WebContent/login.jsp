@@ -4,7 +4,8 @@
 <html>
 <head>
   <title>Log In Page</title>
-<style>
+  <link rel="stylesheet" href="style.css" >
+<!-- <style>
      body {
       font-family: Arial, sans-serif;
       margin: 0;
@@ -28,10 +29,11 @@
 
   
     
-</style>
+</style> -->
 </head>
 <body>
-<a href="home.jsp" class="btn">Home</a>
+<!-- Common Header to all pages -->
+<%@include file="header.jsp"%>
 
 <h1>Member Login Page! (CST8288)</h1>
  <div class="login">
@@ -50,12 +52,12 @@
             <input type="password" id="password" name="password" required>
         </div>
         <div>
-            <button type="submit">Login</button>
+            <button type="submit" >Login</button>
         </div>
     </form>
     
 	<p>
-      <a class="button">Submit</a>
+     <!--   <a class="button">Submit</a>-->
       <a href="signup.jsp" class="button">New Member?</a>
     </p>
 </div>

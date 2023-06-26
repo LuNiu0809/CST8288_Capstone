@@ -109,7 +109,7 @@ class ReviewDaoTester {
 		try {
 			reviewList = reviewDao.readNumReviews(2 , 5);
 			for (Review review : reviewList) {
-				//review.printReviewToConsole();
+				review.printReviewToConsole();
 				
 			}
 			
