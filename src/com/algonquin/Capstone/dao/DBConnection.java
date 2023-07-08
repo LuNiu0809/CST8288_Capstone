@@ -15,21 +15,38 @@ import java.sql.SQLException;
  */
 public class DBConnection {
 	
-	// TODO: Implement Singleton design pattern. 
 	
 	private static final String URL = "jdbc:mysql://localhost:3306/RestuarantReviews";
     private static final String USER = "root";
     private static final String PASSWORD = "root";
     
+    private static DBConnection dbConnection;
+    private static Connection connection;
+    
+    
+    private DBConnection() {
+    	
+    }
+    
+    /**
+     * Uses the singleton design pattern to return only one DBConnection instance. 
+     * @return the DBConnection
+     */
+    public static synchronized DBConnection getDBConnection() {
+    	if (dbConnection == null) {
+    		dbConnection = new DBConnection();
+    	}
+    	return dbConnection;
+    }
 
     /**
      * Creates and returns a connection the database
      * @return the connection. 
      * @throws ClassNotFoundException 
      */
-    public static Connection getConnectionToDatabase()  {
+    public static synchronized Connection getConnectionToDatabase()  {	
     	    	
-       Connection connection = null;
+       connection = null;
        try {		
     	    Class.forName("com.mysql.cj.jdbc.Driver");
 			connection = DriverManager.getConnection(URL, USER, PASSWORD);
