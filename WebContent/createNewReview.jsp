@@ -18,9 +18,9 @@
 <%@include file="header.jsp"%>
 <%
 Business business = new Business(); 
-BusinessDao businessDao = new BusinessDao();
+BusinessService businessService = new BusinessService();
 int businessId = Integer.valueOf(request.getParameter("businessId"));
-business = businessDao.readBusiness(businessId);
+business = businessService.readBusiness(businessId);
 
 Review review = new Review();
 ReviewService reviewService = new ReviewService();
@@ -78,7 +78,7 @@ if (createStatus > 0){
 	// Update the business ratings in the database. 
 	int newPriceRating = business.getPriceRating();
 	int newOverallRating = business.getOverallRating();
-	int businessUpdateStatus = businessDao.updateRatings(businessId, newPriceRating, newOverallRating);
+	int businessUpdateStatus = businessService.updateRatings(businessId, newPriceRating, newOverallRating);
 	
 	if (businessUpdateStatus > 0){
 		RequestDispatcher rd = request.getRequestDispatcher("businessReviews.jsp?");

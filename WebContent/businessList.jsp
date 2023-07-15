@@ -4,6 +4,7 @@
 <!DOCTYPE html>
 <%@page import="com.algonquin.Capstone.beans.*" %>
 <%@page import="com.algonquin.Capstone.dao.*" %>
+<%@page import="com.algonquin.Capstone.service.*"%>
 <%@page import="java.util.ArrayList" %>
 
 
@@ -24,8 +25,8 @@
 		<table>
 			<%
 			ArrayList<Business> businessList = new ArrayList<>();
-				BusinessDao businessDao = new BusinessDao();
-				businessList = businessDao.readNumBusiness(5);
+				BusinessService businessService = new BusinessService();
+				businessList = businessService.readNumBusiness(5);
 				for (Business business : businessList) {		
 				
 			%>

@@ -17,11 +17,11 @@
 
 <%
 Business business = new Business(); 
-BusinessDao businessDao = new BusinessDao();
+BusinessService businessService = new BusinessService();
 int businessId = Integer.valueOf(request.getParameter("businessId"));
 
 
-business = businessDao.readBusiness(businessId);
+business = businessService.readBusiness(businessId);
 
 ArrayList<Review> reviewList = new ArrayList<>();
 ReviewService reviewService = new ReviewService();

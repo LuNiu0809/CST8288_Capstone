@@ -2,6 +2,7 @@
     pageEncoding="UTF-8"%>
     <%@page import="com.algonquin.Capstone.beans.*"%>
 	<%@page import="com.algonquin.Capstone.dao.*"%>
+	<%@page import="com.algonquin.Capstone.service.*"%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -12,9 +13,9 @@
 <body>
 <%
 Business business = new Business(); 
-BusinessDao businessDao = new BusinessDao();
+BusinessService businessService = new BusinessService();
 int businessId = Integer.valueOf(request.getParameter("businessId"));
-business = businessDao.readBusiness(businessId);
+business = businessService.readBusiness(businessId);
 
 
 %>

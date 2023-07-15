@@ -1,0 +1,53 @@
+package com.algonquin.Capstone.service;
+
+import java.sql.SQLException;
+import java.util.ArrayList;
+
+import com.algonquin.Capstone.beans.Review;
+
+public interface ReviewServiceInterface {
+	
+	/**
+	 * Creates a new review in the database, Returns the number of rows added to the database. 
+	 * If the number of rows = 0 then the creation failed. 
+	 * @param review the review to be added 
+	 * @return the number of rows added to the database. 
+	 */
+	public int createReview(Review review);
+	
+	/**
+	 * Reads the request number of reviews for a business.
+	 * @param businessID the id of the business to get reviews for
+	 * @param numReviews the number of reviews to return for the business
+	 * @return the number of reviews for the requested business
+	 * @throws SQLException 
+	 */
+	public ArrayList<Review> readNumReviews(int businessID, int numReviews) throws SQLException;
+	
+	/**
+	 * Reads all reviews for a business
+	 * @param businessID the id of the business to read the reviews for 
+	 * @return the reviews for that business
+	 * @throws SQLException
+	 */
+	public ArrayList<Review> readAllReviews(int businessID) throws SQLException;
+	
+	/**
+	 * Reads a specific review based on its ID
+	 * @param reviewID the id of the review to be read
+	 * @return the review read from the database. 
+	 * @throws SQLException
+	 */
+	public Review readReview(int reviewID) throws SQLException;
+	
+	/**
+	 * Updates the useful count of a review
+	 * @param reviewID the review to be updated
+	 * @param newUsefulCount the new count
+	 * @return returns the number of rows updated, or 0 if the update failed. 
+	 */
+	public int updateUsefulCount(int reviewID, int newUsefulCount);
+	
+
+
+}
