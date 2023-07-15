@@ -11,19 +11,16 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 
 import com.algonquin.Capstone.beans.Review;
+import com.algonquin.Capstone.service.ReviewServiceInterface;
 
 /**
  * Manages interactions to the Review Table in the database 
  */
-public class ReviewDao {
+public class ReviewDao implements ReviewServiceInterface{
 	
 	
-	/**
-	 * Creates a new review in the database, Returns the number of rows added to the database. 
-	 * If the number of rows = 0 then the creation failed. 
-	 * @param review the review to be added 
-	 * @return the number of rows added to the database. 
-	 */
+	
+	@Override
 	public synchronized int createReview(Review review) {
 		
 		try (
@@ -61,13 +58,8 @@ public class ReviewDao {
 		
 	}
 	
-	/**
-	 * Reads the request number of reviews for a business.
-	 * @param businessID the id of the business to get reviews for
-	 * @param numReviews the number of reviews to return for the business
-	 * @return the number of reviews for the requested business
-	 * @throws SQLException 
-	 */
+	
+	@Override
 	public synchronized ArrayList<Review> readNumReviews(int businessID, int numReviews) throws SQLException{
 		
 		ResultSet rs = null;
@@ -149,12 +141,8 @@ public class ReviewDao {
 		return null;
 	}
 	
-	/**
-	 * Reads all reviews for a business
-	 * @param businessID the id of the business to read the reviews for 
-	 * @return the reviews for that business
-	 * @throws SQLException
-	 */
+
+	@Override
 	public synchronized ArrayList<Review> readAllReviews(int businessID) throws SQLException{
 		
 		ResultSet rs = null;
@@ -233,12 +221,8 @@ public class ReviewDao {
 		return null;
 	}
 	
-	/**
-	 * Reads a specific review based on its ID
-	 * @param reviewID the id of the review to be read
-	 * @return the review read from the database. 
-	 * @throws SQLException
-	 */
+
+	@Override
 	public synchronized Review readReview(int reviewID) throws SQLException{
 		
 		ResultSet rs = null;
@@ -346,12 +330,8 @@ public class ReviewDao {
 		} 	
 	}
 	
-	/**
-	 * Updates the useful count of a review
-	 * @param reviewID the review to be updated
-	 * @param newUsefulCount the new count
-	 * @return returns the number of rows updated, or 0 if the update failed. 
-	 */
+
+	@Override
 	public synchronized int updateUsefulCount(int reviewID, int newUsefulCount) {
 		
     	try (

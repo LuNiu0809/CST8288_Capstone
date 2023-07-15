@@ -3,6 +3,7 @@
 <%@page import="java.lang.String"%>
 <%@page import="com.algonquin.Capstone.beans.*"%>
 <%@page import="com.algonquin.Capstone.dao.*"%>
+<%@page import="com.algonquin.Capstone.service.*"%>
 <%@page import="java.util.ArrayList"%>
 <!DOCTYPE html>
 <html>
@@ -14,17 +15,17 @@
 </head>
 <body>
 
-	<%
+<%
 Business business = new Business(); 
-BusinessDao businessDao = new BusinessDao();
+BusinessService businessService = new BusinessService();
 int businessId = Integer.valueOf(request.getParameter("businessId"));
 
 
-business = businessDao.readBusiness(businessId);
+business = businessService.readBusiness(businessId);
 
 ArrayList<Review> reviewList = new ArrayList<>();
-ReviewDao reviewDao = new ReviewDao();
-reviewList = reviewDao.readNumReviews(businessId, 5);
+ReviewService reviewService = new ReviewService();
+reviewList = reviewService.readNumReviews(businessId, 5);
 
 UserDao userDao = new UserDao();
 
