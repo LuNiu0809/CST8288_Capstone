@@ -3,6 +3,7 @@
     <%@page import="java.lang.String"%>
     <%@page import="com.algonquin.Capstone.beans.*"%>
 	<%@page import="com.algonquin.Capstone.dao.*"%>
+	<%@page import="com.algonquin.Capstone.service.*"%>
 	<%@page import="java.util.ArrayList"%>
 <!DOCTYPE html>
 <html>
@@ -22,7 +23,8 @@ int businessId = Integer.valueOf(request.getParameter("businessId"));
 business = businessDao.readBusiness(businessId);
 
 Review review = new Review();
-ReviewDao reviewDao = new ReviewDao();
+ReviewService reviewService = new ReviewService();
+
 
 //Create a new session
 session = request.getSession(true);
@@ -62,14 +64,14 @@ review.setPriceRating(priceRating);
 review.setContent(content);
 review.generateCreationDate();
 
-int createStatus = reviewDao.createReview(review);
+int createStatus = reviewService.createReview(review);
 
 
 if (createStatus > 0){
 	
 	// When review is added, calculate the new ratings for the business
 	ArrayList <Review> reviewList = new ArrayList<>();
-	reviewList = reviewDao.readAllReviews(businessId);
+	reviewList = reviewService.readAllReviews(businessId);
 			
 	business.calculateRatings(reviewList);
 	

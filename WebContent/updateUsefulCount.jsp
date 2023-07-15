@@ -2,6 +2,7 @@
     pageEncoding="UTF-8"%>
      <%@page import="com.algonquin.Capstone.beans.*"%>
 	<%@page import="com.algonquin.Capstone.dao.*"%>
+	<%@page import="com.algonquin.Capstone.service.*"%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -11,12 +12,13 @@
 <body>
 <% 
 Review review = new Review();
-ReviewDao reviewDao = new ReviewDao();
+ReviewService reviewService = new ReviewService();
+
 
 int reviewId = Integer.valueOf(request.getParameter("reviewId"));
-review = reviewDao.readReview(reviewId);
+review = reviewService.readReview(reviewId);
 review.increaseUsefulCount();
-reviewDao.updateUsefulCount(reviewId, review.getUsefulCount());
+reviewService.updateUsefulCount(reviewId, review.getUsefulCount());
 
 RequestDispatcher rd = request.getRequestDispatcher("businessReviews.jsp?");
 rd.forward(request, response);
