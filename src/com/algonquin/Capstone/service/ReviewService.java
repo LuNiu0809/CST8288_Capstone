@@ -6,6 +6,9 @@ package com.algonquin.Capstone.service;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
+import javax.servlet.RequestDispatcher;
+
+import com.algonquin.Capstone.beans.Business;
 import com.algonquin.Capstone.beans.Review;
 import com.algonquin.Capstone.dao.ReviewDao;
 
@@ -22,8 +25,31 @@ public class ReviewService implements ReviewServiceInterface{
 	
 	@Override
 	public int createReview(Review review) {
-		return reviewDao.createReview(review);
-		
+		try {
+			// Add new review to the database. 
+			int createStatus = reviewDao.createReview(review);
+			
+			// If the review was successfully added to the database, update the business's overall ratings. 
+			if (createStatus > 0){
+				Business business = new Business();
+				BusinessService businessService = new BusinessService();
+
+				int businessUpdateStatus;
+				
+				businessUpdateStatus = businessService.updateRatings(business);
+				if (businessUpdateStatus > 0){
+					return businessUpdateStatus;
+				} else {
+					throw new Exception();
+				}
+			} else {	
+				throw new Exception();
+			}
+
+		} catch (Exception e) {
+			return 0;
+		}
+	
 	}
 	
 	@Override

@@ -4,8 +4,6 @@
 package com.algonquin.Capstone.dao;
 
 
-
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
@@ -229,9 +227,12 @@ class BusinessDaoTester {
 			
 			Business testUpdateBusiness = new Business();
 			testUpdateBusiness = testBusinessDao.readBusiness(updateID);
-			//testUpdateBusiness.printBusinessToConsole();			
+			//testUpdateBusiness.printBusinessToConsole();		
 			
-			assertNotEquals(0, testBusinessDao.updateRatings(updateID, 3, 3));		
+			testUpdateBusiness.setOverallRating(3);
+			testUpdateBusiness.setPriceRating(3);
+			
+			assertNotEquals(0, testBusinessDao.updateRatings(testUpdateBusiness));		
 			testUpdateBusiness = testBusinessDao.readBusiness(updateID);
 			//testUpdateBusiness.printBusinessToConsole();
 			

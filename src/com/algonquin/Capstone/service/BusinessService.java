@@ -7,6 +7,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 
 import com.algonquin.Capstone.beans.Business;
+import com.algonquin.Capstone.beans.Review;
 import com.algonquin.Capstone.dao.BusinessDao;
 
 /**
@@ -36,8 +37,19 @@ public class BusinessService implements BusinessServiceInterface{
 	}
 
 	@Override
-	public int updateRatings(int businessID, int newPriceRating, int newOverallRating) {
-		return businessDao.updateRatings(businessID, newPriceRating, newOverallRating);
+	public int updateRatings(Business business) throws SQLException{
+
+		ReviewService reviewService = new ReviewService();
+
+		// Read all the reviews for this business, then recalculate the ratings. 
+		ArrayList <Review> reviewList = new ArrayList<>();
+		int businessID = business.getId();
+		reviewList = reviewService.readAllReviews(businessID);
+
+		business.calculateRatings(reviewList);
+		
+		// Update the ratings in the database.
+		return businessDao.updateRatings(business);
 	}
 
 }

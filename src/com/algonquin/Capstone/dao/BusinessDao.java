@@ -234,7 +234,7 @@ public class BusinessDao implements BusinessServiceInterface{
 	
 
 	@Override
-	public synchronized int updateRatings(int businessID, int newPriceRating, int newOverallRating) {
+	public synchronized int updateRatings(Business business) {
 		
     	try (
     			// Create DB Connection
@@ -245,9 +245,9 @@ public class BusinessDao implements BusinessServiceInterface{
     					+ "set PriceRating=?, OverallRating=? "
     					+ "WHERE ID=?");
     			){
-    		updateBusiness.setInt(1, newPriceRating);
-    		updateBusiness.setInt(2, newOverallRating);
-    		updateBusiness.setInt(3, businessID);
+    		updateBusiness.setInt(1, business.getPriceRating());
+    		updateBusiness.setInt(2, business.getOverallRating());
+    		updateBusiness.setInt(3, business.getId());
 			return updateBusiness.executeUpdate();		
 			
 		} catch (SQLException e) {		

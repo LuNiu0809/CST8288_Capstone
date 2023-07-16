@@ -76,72 +76,23 @@ public class ReviewServlet extends HttpServlet{
 	 * @throws IOException
 	 */
 	private void createNewReview(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		
-		Business business = new Business(); 
-		BusinessService businessService = new BusinessService();
-		int businessId = Integer.valueOf(req.getParameter("businessId"));
-
-		try {
-			business = businessService.readBusiness(businessId);
-		} catch (SQLException e) {		
-			e.printStackTrace();
-			forwardToErrorPage(req, resp, "Error Reading Business From Database");
-		}
-
-		Review review = new Review();
+	
 		ReviewService reviewService = new ReviewService();
 
-		// get review information from post.
-		int foodRating = Integer.valueOf(req.getParameter("foodRating"));
-		int serviceRating = Integer.valueOf(req.getParameter("serviceRating"));
-		int atmosphereRating = Integer.valueOf(req.getParameter("atmosphereRating"));
-		int priceRating = Integer.valueOf(req.getParameter("priceRating"));
-		String content = req.getParameter("content");
-		
-		// Get current user ID
-		int userId = getCurrentUserID(req);
+		// Set the review data from the Request. 
+		Review review = setReviewData(req);
 
-		//Set review values
-		review.setAuthorID(userId);
-		review.setBusinessID(businessId);
-		review.setFoodRating(foodRating);
-		review.setServiceRating(serviceRating);
-		review.setAtmosphereRating(atmosphereRating);
-		review.setPriceRating(priceRating);
-		review.setContent(content);
-		review.generateCreationDate();
-
-		// Create new review in Database. 
+		// Create the new review in Database. 
 		int createStatus = reviewService.createReview(review);
 
+		// If the review was successfully added to the database return to the business reivews page.
 		if (createStatus > 0){
-
-			// When review is added, calculate the new ratings for the business
-			ArrayList <Review> reviewList = new ArrayList<>();
-			try {
-				reviewList = reviewService.readAllReviews(businessId);
-			} catch (SQLException e) {
-				forwardToErrorPage(req, resp, "Error Creating new Review");
-				e.printStackTrace();
-			}
-
-			business.calculateRatings(reviewList);
-
-			// Update the business ratings in the database. 
-			int newPriceRating = business.getPriceRating();
-			int newOverallRating = business.getOverallRating();
-			int businessUpdateStatus = businessService.updateRatings(businessId, newPriceRating, newOverallRating);
-
-			if (businessUpdateStatus > 0){
-				RequestDispatcher rd = req.getRequestDispatcher("businessReviews.jsp?");
-				rd.forward(req, resp);
-			}
-
-
+			RequestDispatcher rd = req.getRequestDispatcher("businessReviews.jsp?");
+			rd.forward(req, resp);
 		} else {
 			forwardToErrorPage(req, resp, "Error Creating new Review");
 		}
-		
+
 	}
 	
 	/**
@@ -226,6 +177,37 @@ public class ReviewServlet extends HttpServlet{
 			return 0;
 		}
 
+	}
+	
+	private Review setReviewData(HttpServletRequest req) {
+		
+		Review review = new Review();	
+		
+		// get review information from post.
+		int foodRating = Integer.valueOf(req.getParameter("foodRating"));
+		int serviceRating = Integer.valueOf(req.getParameter("serviceRating"));
+		int atmosphereRating = Integer.valueOf(req.getParameter("atmosphereRating"));
+		int priceRating = Integer.valueOf(req.getParameter("priceRating"));
+		String content = req.getParameter("content");
+		
+		// Get current user ID
+		int userId = getCurrentUserID(req);
+		
+		// Get business ID
+		int businessId = Integer.valueOf(req.getParameter("businessId"));
+		
+		//Set review values
+		review.setAuthorID(userId);
+		review.setBusinessID(businessId);
+		review.setFoodRating(foodRating);
+		review.setServiceRating(serviceRating);
+		review.setAtmosphereRating(atmosphereRating);
+		review.setPriceRating(priceRating);
+		review.setContent(content);
+		review.generateCreationDate();
+		
+		return review;
+		
 	}
 
 }
