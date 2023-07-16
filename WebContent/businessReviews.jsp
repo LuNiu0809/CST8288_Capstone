@@ -110,7 +110,7 @@ if (session.getAttribute("authenticated") != null){
 		</td>
 		<td>
 		<%out.print(review.getUsefulCount() + " Other users found this reivew helpful <br> Was this review Helpful?");%>
-		<a href="updateUsefulCount.jsp?reviewId=<%out.print(review.getID());%>&businessId=<%out.print(business.getId());%>" class="button">Yes</a>
+		<a href="UpdateUsefulCount?reviewId=<%out.print(review.getID());%>&businessId=<%out.print(business.getId());%>" class="button">Yes</a>
 		</td>
 			
 		</tr>

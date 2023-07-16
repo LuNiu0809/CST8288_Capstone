@@ -25,28 +25,61 @@ import com.algonquin.Capstone.service.ReviewService;
 /**
  * 
  */
-@WebServlet(name = "CreateNewReviewServlet", urlPatterns = {"/CreateNewReviewServlet"} )
-public class CreateNewReviewServlet extends HttpServlet{
+@WebServlet(name = "ReviewServlet", urlPatterns = {"/CreateNewReview", "/UpdateUsefulCount"} )
+public class ReviewServlet extends HttpServlet{
 	
 	private static final long serialVersionUID = 1L;
 	private HttpSession session;
 	
-	public CreateNewReviewServlet() {
-		
-	}
 	
 	@Override
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		
-			
+		String requestURI = req.getRequestURI();
+
+		if (requestURI.endsWith("/CreateNewReview")) {
+			// Create a new review. 
+			createNewReview(req, resp);
+		} else {
+			// Invalid URL
+			resp.sendError(HttpServletResponse.SC_NOT_FOUND);
+		}
+
+	}
+	
+	@Override
+	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		
+		String requestURI = req.getRequestURI();
+		
+		 if (requestURI.contains("/UpdateUsefulCount")) {
+			// Update Review Useful Count		
+			updateUsefulCount(req, resp);
+		} else {
+			// Invalid URL
+			resp.sendError(HttpServletResponse.SC_NOT_FOUND);
+		}
+		
+	}
+	
+	/**
+	 * Creates a new review for a business
+	 * @param req
+	 * @param resp
+	 * @throws ServletException
+	 * @throws IOException
+	 */
+	private void createNewReview(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		
 		Business business = new Business(); 
 		BusinessService businessService = new BusinessService();
 		int businessId = Integer.valueOf(req.getParameter("businessId"));
+
 		try {
 			business = businessService.readBusiness(businessId);
 		} catch (SQLException e) {		
 			e.printStackTrace();
-			forwardToErrorPage(req, resp);
+			forwardToErrorPage(req, resp, "Error Reading Business From Database");
 		}
 
 		Review review = new Review();
@@ -62,7 +95,7 @@ public class CreateNewReviewServlet extends HttpServlet{
 		}
 		if (session.getAttribute("authenticated") != null)	{
 			authenticated = (boolean) session.getAttribute("authenticated");
-			
+
 		} 
 
 		// Get user name from current session. 
@@ -80,9 +113,9 @@ public class CreateNewReviewServlet extends HttpServlet{
 
 		int userId = user.getId(); 
 
+		//Set review values
 		review.setAuthorID(userId);
 		review.setBusinessID(businessId);
-
 		review.setFoodRating(foodRating);
 		review.setServiceRating(serviceRating);
 		review.setAtmosphereRating(atmosphereRating);
@@ -90,42 +123,72 @@ public class CreateNewReviewServlet extends HttpServlet{
 		review.setContent(content);
 		review.generateCreationDate();
 
+		// Create new review in Database. 
 		int createStatus = reviewService.createReview(review);
 
 
 		if (createStatus > 0){
-			
+
 			// When review is added, calculate the new ratings for the business
 			ArrayList <Review> reviewList = new ArrayList<>();
 			try {
 				reviewList = reviewService.readAllReviews(businessId);
 			} catch (SQLException e) {
-				forwardToErrorPage(req, resp);
+				forwardToErrorPage(req, resp, "Error Creating new Review");
 				e.printStackTrace();
 			}
-					
+
 			business.calculateRatings(reviewList);
-			
+
 			// Update the business ratings in the database. 
 			int newPriceRating = business.getPriceRating();
 			int newOverallRating = business.getOverallRating();
 			int businessUpdateStatus = businessService.updateRatings(businessId, newPriceRating, newOverallRating);
-			
+
 			if (businessUpdateStatus > 0){
 				RequestDispatcher rd = req.getRequestDispatcher("businessReviews.jsp?");
 				rd.forward(req, resp);
 			}
-				
-			
+
+
 		} else {
-			forwardToErrorPage(req, resp);
+			forwardToErrorPage(req, resp, "Error Creating new Review");
 		}
-		
 		
 	}
 	
-	private void forwardToErrorPage(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		RequestDispatcher rd = req.getRequestDispatcher("ErrorCreatingReview");
+	/**
+	 * Updates the useful count for a review
+	 * @param req
+	 * @param resp
+	 * @throws ServletException
+	 * @throws IOException
+	 */
+	private void updateUsefulCount(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		
+		Review review = new Review();
+		ReviewService reviewService = new ReviewService();
+
+
+		int reviewId = Integer.valueOf(req.getParameter("reviewId"));
+		try {
+			review = reviewService.readReview(reviewId);
+		} catch (SQLException e) {
+			
+			e.printStackTrace();
+		}
+		review.increaseUsefulCount();
+		reviewService.updateUsefulCount(reviewId, review.getUsefulCount());
+
+		RequestDispatcher rd = req.getRequestDispatcher("businessReviews.jsp?");
+		rd.forward(req, resp);
+
+	}
+	
+	private void forwardToErrorPage(HttpServletRequest req, HttpServletResponse resp, String message) throws ServletException, IOException {
+		RequestDispatcher rd = req.getRequestDispatcher("Error.jsp");
+		session = req.getSession(true);
+		session.setAttribute("errorMessage", message);
 		rd.forward(req, resp);
 	}
 

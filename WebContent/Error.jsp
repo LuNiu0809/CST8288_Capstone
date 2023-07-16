@@ -6,7 +6,7 @@
 <html>
 <head>
 <meta charset="ISO-8859-1">
-<title>New Review Creation Error</title>
+<title>Error</title>
 <link rel="stylesheet" href="style.css" >
 </head>
 
@@ -14,7 +14,15 @@
 <!-- Common Header to all pages -->
 <%@include file="header.jsp"%>
 <p>
-"Error Creating Review! Please try again."
+<%
+String message = "Error";
+if(session.getAttribute("errorMessage") != null){
+	 message = session.getAttribute("errorMessage").toString();
+}
+out.print(message);
+%>
+
+
 </p>
 
 </body>
