@@ -21,6 +21,7 @@ import com.algonquin.Capstone.beans.User;
 import com.algonquin.Capstone.dao.UserDao;
 import com.algonquin.Capstone.service.BusinessService;
 import com.algonquin.Capstone.service.ReviewService;
+import com.algonquin.Capstone.service.UserReviewUsefulService;
 
 /**
  * 
@@ -85,33 +86,15 @@ public class ReviewServlet extends HttpServlet{
 		Review review = new Review();
 		ReviewService reviewService = new ReviewService();
 
-		//Create a new session
-		session = req.getSession(true);
-		String currentUsername = "";
-		boolean authenticated = false;
-
-		if (session.getAttribute("username") != null){
-			currentUsername = session.getAttribute("username").toString();
-		}
-		if (session.getAttribute("authenticated") != null)	{
-			authenticated = (boolean) session.getAttribute("authenticated");
-
-		} 
-
-		// Get user name from current session. 
-		User user = new User();
-		UserDao userDao = new UserDao();
-		user = userDao.getUserByUsername(currentUsername);
-
 		// get review information from post.
 		int foodRating = Integer.valueOf(req.getParameter("foodRating"));
 		int serviceRating = Integer.valueOf(req.getParameter("serviceRating"));
 		int atmosphereRating = Integer.valueOf(req.getParameter("atmosphereRating"));
 		int priceRating = Integer.valueOf(req.getParameter("priceRating"));
 		String content = req.getParameter("content");
-
-
-		int userId = user.getId(); 
+		
+		// Get current user ID
+		int userId = getCurrentUserID(req);
 
 		//Set review values
 		review.setAuthorID(userId);
@@ -125,7 +108,6 @@ public class ReviewServlet extends HttpServlet{
 
 		// Create new review in Database. 
 		int createStatus = reviewService.createReview(review);
-
 
 		if (createStatus > 0){
 
@@ -168,7 +150,11 @@ public class ReviewServlet extends HttpServlet{
 		
 		Review review = new Review();
 		ReviewService reviewService = new ReviewService();
-
+		
+		UserReviewUsefulService userReviewUsefulService = new UserReviewUsefulService();
+		
+		// Get current user ID
+		int userId = getCurrentUserID(req);
 
 		int reviewId = Integer.valueOf(req.getParameter("reviewId"));
 		try {
@@ -178,8 +164,17 @@ public class ReviewServlet extends HttpServlet{
 			e.printStackTrace();
 		}
 		review.increaseUsefulCount();
-		reviewService.updateUsefulCount(reviewId, review.getUsefulCount());
-
+		
+		// Check to make sure the review table was updated. 
+		if (reviewService.updateUsefulCount(reviewId, review.getUsefulCount()) == 0) {
+			forwardToErrorPage(req, resp, "Error Updating Review Useful Count");
+		}
+		
+		// Check to make sure the User Review Useful Table was updated. 
+		if (userReviewUsefulService.addUserReviewHelpfulRecord(userId, reviewId) == 0) {
+			forwardToErrorPage(req, resp, "Error Updating Review Useful Count");
+		}
+	
 		RequestDispatcher rd = req.getRequestDispatcher("businessReviews.jsp?");
 		rd.forward(req, resp);
 
@@ -190,6 +185,31 @@ public class ReviewServlet extends HttpServlet{
 		session = req.getSession(true);
 		session.setAttribute("errorMessage", message);
 		rd.forward(req, resp);
+	}
+	
+	/**
+	 * Gets the current User ID, returns 0 if current username is null. 
+	 * @param req
+	 * @return Current user ID or 0 if current username is null.
+	 */
+	private int getCurrentUserID(HttpServletRequest req) {
+
+		//Create a new session
+		session = req.getSession(true);
+		String currentUsername = "";
+		
+		if (session.getAttribute("username") != null){
+			// Get user name from current session. 
+			currentUsername = session.getAttribute("username").toString();
+				
+			User user = new User();
+			UserDao userDao = new UserDao();
+			user = userDao.getUserByUsername(currentUsername);
+			return user.getId();
+		} else {
+			return 0;
+		}
+
 	}
 
 }

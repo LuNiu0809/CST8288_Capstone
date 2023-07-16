@@ -94,6 +94,26 @@ CREATE TABLE IF NOT EXISTS `RestuarantReviews`.`review` (
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
+-- -----------------------------------------------------
+-- Table `RestuarantReviews`.`user_review_useful`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `RestuarantReviews`.`user_review_useful` (
+  `user_ID` INT NOT NULL,
+  `review_ID` INT NOT NULL,
+  INDEX `fk_user_review_useful_user_idx` (`user_ID` ASC) VISIBLE,
+  INDEX `fk_user_review_useful_review1_idx` (`review_ID` ASC) VISIBLE,
+  CONSTRAINT `fk_user_review_useful_user`
+    FOREIGN KEY (`user_ID`)
+    REFERENCES `restuarantreviews`.`user` (`ID`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_user_review_useful_review1`
+    FOREIGN KEY (`review_ID`)
+    REFERENCES `restuarantreviews`.`review` (`ID`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
 
 
 -- -----------------------------------------------------
@@ -135,7 +155,7 @@ INSERT INTO business (ID, Name, Address, Description, PhoneNumber, Email, Overal
 VALUES(3, 'Irish Pub', '789 Fake Street, Ottawa ON', 'Irish Pub Description', '613-123-3456', 'IrishPub@gmail.com', 3, 1, 'Irish Pub', '11:00AM - 1:OOAM');
 
 INSERT INTO business (ID, Name, Address, Description, PhoneNumber, Email, OverallRating, PriceRating, FoodType, HoursOfOperation)
-VALUES(4, 'cafe', '124 Le Fake Rue, Ottawa ON', 'caf� Description', '613-123-7891', 'caf�@gmail.com', 5, 4, 'French', '7:00AM - 7:OOPM');
+VALUES(4, 'cafe', '124 Le Fake Rue, Ottawa ON', 'cafe Description', '613-123-7891', 'cafe@gmail.com', 5, 4, 'French', '7:00AM - 7:OOPM');
 
 INSERT INTO business (ID, Name, Address, Description, PhoneNumber, Email, OverallRating, PriceRating, FoodType, HoursOfOperation)
 VALUES(5, 'Biergarten', '456 Beer Garden Way, Ottawa ON', 'Biergarten Description', '613-123-2198', 'Biergarten@gmail.com', 4, 2, 'German', '11:00AM - 1:OOAM');
