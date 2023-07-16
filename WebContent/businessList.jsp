@@ -27,8 +27,7 @@
 			ArrayList<Business> businessList = new ArrayList<>();
 				BusinessService businessService = new BusinessService();
 				businessList = businessService.readNumBusiness(5);
-				for (Business business : businessList) {		
-				
+				for (Business business : businessList) {				
 			%>
 			
 			<tr>

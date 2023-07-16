@@ -33,12 +33,10 @@ public interface BusinessServiceInterface {
 	
 	
 	/**
-	 * Updates the Price and Overall Ratings for a business
-	 * @param businessID the business to be updated
-	 * @param newPriceRating the new price rating 
-	 * @param newOverallRating the new overall rating 
+	 * Updates the Price and Overall Ratings only for a business
+	 * @param business the business to be updated
 	 * @return returns the number of rows updated, or 0 if the update failed. 
 	 */
-	public int updateRatings(int businessID, int newPriceRating, int newOverallRating);
+	public int updateRatings(Business business) throws SQLException;
 
 }

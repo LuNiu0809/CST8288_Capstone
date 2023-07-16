@@ -21,6 +21,7 @@ import com.algonquin.Capstone.beans.User;
 import com.algonquin.Capstone.dao.UserDao;
 import com.algonquin.Capstone.service.BusinessService;
 import com.algonquin.Capstone.service.ReviewService;
+import com.algonquin.Capstone.service.UserReviewUsefulService;
 
 /**
  * 
@@ -54,7 +55,12 @@ public class ReviewServlet extends HttpServlet{
 		
 		 if (requestURI.contains("/UpdateUsefulCount")) {
 			// Update Review Useful Count		
-			updateUsefulCount(req, resp);
+			try {
+				updateUsefulCount(req, resp);
+			} catch (ServletException | IOException | SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		} else {
 			// Invalid URL
 			resp.sendError(HttpServletResponse.SC_NOT_FOUND);
@@ -70,91 +76,23 @@ public class ReviewServlet extends HttpServlet{
 	 * @throws IOException
 	 */
 	private void createNewReview(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		
-		Business business = new Business(); 
-		BusinessService businessService = new BusinessService();
-		int businessId = Integer.valueOf(req.getParameter("businessId"));
-
-		try {
-			business = businessService.readBusiness(businessId);
-		} catch (SQLException e) {		
-			e.printStackTrace();
-			forwardToErrorPage(req, resp, "Error Reading Business From Database");
-		}
-
-		Review review = new Review();
+	
 		ReviewService reviewService = new ReviewService();
 
-		//Create a new session
-		session = req.getSession(true);
-		String currentUsername = "";
-		boolean authenticated = false;
+		// Set the review data from the Request. 
+		Review review = setReviewData(req);
 
-		if (session.getAttribute("username") != null){
-			currentUsername = session.getAttribute("username").toString();
-		}
-		if (session.getAttribute("authenticated") != null)	{
-			authenticated = (boolean) session.getAttribute("authenticated");
-
-		} 
-
-		// Get user name from current session. 
-		User user = new User();
-		UserDao userDao = new UserDao();
-		user = userDao.getUserByUsername(currentUsername);
-
-		// get review information from post.
-		int foodRating = Integer.valueOf(req.getParameter("foodRating"));
-		int serviceRating = Integer.valueOf(req.getParameter("serviceRating"));
-		int atmosphereRating = Integer.valueOf(req.getParameter("atmosphereRating"));
-		int priceRating = Integer.valueOf(req.getParameter("priceRating"));
-		String content = req.getParameter("content");
-
-
-		int userId = user.getId(); 
-
-		//Set review values
-		review.setAuthorID(userId);
-		review.setBusinessID(businessId);
-		review.setFoodRating(foodRating);
-		review.setServiceRating(serviceRating);
-		review.setAtmosphereRating(atmosphereRating);
-		review.setPriceRating(priceRating);
-		review.setContent(content);
-		review.generateCreationDate();
-
-		// Create new review in Database. 
+		// Create the new review in Database. 
 		int createStatus = reviewService.createReview(review);
 
-
+		// If the review was successfully added to the database return to the business reivews page.
 		if (createStatus > 0){
-
-			// When review is added, calculate the new ratings for the business
-			ArrayList <Review> reviewList = new ArrayList<>();
-			try {
-				reviewList = reviewService.readAllReviews(businessId);
-			} catch (SQLException e) {
-				forwardToErrorPage(req, resp, "Error Creating new Review");
-				e.printStackTrace();
-			}
-
-			business.calculateRatings(reviewList);
-
-			// Update the business ratings in the database. 
-			int newPriceRating = business.getPriceRating();
-			int newOverallRating = business.getOverallRating();
-			int businessUpdateStatus = businessService.updateRatings(businessId, newPriceRating, newOverallRating);
-
-			if (businessUpdateStatus > 0){
-				RequestDispatcher rd = req.getRequestDispatcher("businessReviews.jsp?");
-				rd.forward(req, resp);
-			}
-
-
+			RequestDispatcher rd = req.getRequestDispatcher("businessReviews.jsp?");
+			rd.forward(req, resp);
 		} else {
 			forwardToErrorPage(req, resp, "Error Creating new Review");
 		}
-		
+
 	}
 	
 	/**
@@ -163,23 +101,47 @@ public class ReviewServlet extends HttpServlet{
 	 * @param resp
 	 * @throws ServletException
 	 * @throws IOException
+	 * @throws SQLException 
 	 */
-	private void updateUsefulCount(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+	private void updateUsefulCount(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException, SQLException {
 		
 		Review review = new Review();
 		ReviewService reviewService = new ReviewService();
-
-
+		
+		UserReviewUsefulService userReviewUsefulService = new UserReviewUsefulService();
+		
+		// Get current user ID
+		int userId = getCurrentUserID(req);
 		int reviewId = Integer.valueOf(req.getParameter("reviewId"));
+		
 		try {
 			review = reviewService.readReview(reviewId);
 		} catch (SQLException e) {
 			
 			e.printStackTrace();
 		}
-		review.increaseUsefulCount();
-		reviewService.updateUsefulCount(reviewId, review.getUsefulCount());
 
+		// Check if the user has already found review helpful.
+		if (userReviewUsefulService.checkUserReviewHelpfulRecord(userId, reviewId)) {
+			review.decreaseUsefulCount();
+			// Remove Record and Check to make sure the User Review Useful Table was updated. 
+			if (userReviewUsefulService.deleteUserReviewHelpfulRecord(userId, reviewId) == 0) {
+				forwardToErrorPage(req, resp, "Error Updating Review Useful Count");
+			}
+			
+		} else {
+			review.increaseUsefulCount();
+			// Add Record and Check to make sure the User Review Useful Table was updated. 
+			if (userReviewUsefulService.addUserReviewHelpfulRecord(userId, reviewId) == 0) {
+				forwardToErrorPage(req, resp, "Error Updating Review Useful Count");
+			}
+		}
+			
+		// Check to make sure the review table was updated. 
+		if (reviewService.updateUsefulCount(reviewId, review.getUsefulCount()) == 0) {
+			forwardToErrorPage(req, resp, "Error Updating Review Useful Count");
+		}
+			
 		RequestDispatcher rd = req.getRequestDispatcher("businessReviews.jsp?");
 		rd.forward(req, resp);
 
@@ -190,6 +152,62 @@ public class ReviewServlet extends HttpServlet{
 		session = req.getSession(true);
 		session.setAttribute("errorMessage", message);
 		rd.forward(req, resp);
+	}
+	
+	/**
+	 * Gets the current User ID, returns 0 if current username is null. 
+	 * @param req
+	 * @return Current user ID or 0 if current username is null.
+	 */
+	private int getCurrentUserID(HttpServletRequest req) {
+
+		//Create a new session
+		session = req.getSession(true);
+		String currentUsername = "";
+		
+		if (session.getAttribute("username") != null){
+			// Get user name from current session. 
+			currentUsername = session.getAttribute("username").toString();
+				
+			User user = new User();
+			UserDao userDao = new UserDao();
+			user = userDao.getUserByUsername(currentUsername);
+			return user.getId();
+		} else {
+			return 0;
+		}
+
+	}
+	
+	private Review setReviewData(HttpServletRequest req) {
+		
+		Review review = new Review();	
+		
+		// get review information from post.
+		int foodRating = Integer.valueOf(req.getParameter("foodRating"));
+		int serviceRating = Integer.valueOf(req.getParameter("serviceRating"));
+		int atmosphereRating = Integer.valueOf(req.getParameter("atmosphereRating"));
+		int priceRating = Integer.valueOf(req.getParameter("priceRating"));
+		String content = req.getParameter("content");
+		
+		// Get current user ID
+		int userId = getCurrentUserID(req);
+		
+		// Get business ID
+		int businessId = Integer.valueOf(req.getParameter("businessId"));
+		
+		//Set review values
+		review.setAuthorID(userId);
+		review.setBusinessID(businessId);
+		review.setFoodRating(foodRating);
+		review.setServiceRating(serviceRating);
+		review.setAtmosphereRating(atmosphereRating);
+		review.setPriceRating(priceRating);
+		review.setContent(content);
+		review.generateCreationDate();
+		
+		return review;
+		
 	}
 
 }

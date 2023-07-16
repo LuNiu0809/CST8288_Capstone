@@ -20,6 +20,8 @@ Business business = new Business();
 BusinessService businessService = new BusinessService();
 int businessId = Integer.valueOf(request.getParameter("businessId"));
 
+UserReviewUsefulService userReviewUsefulService = new UserReviewUsefulService();
+
 
 business = businessService.readBusiness(businessId);
 
@@ -28,7 +30,7 @@ ReviewService reviewService = new ReviewService();
 reviewList = reviewService.readNumReviews(businessId, 5);
 
 UserDao userDao = new UserDao();
-
+int currentUserID = 0;
 %>
 
 <!-- Common Header to all pages -->
@@ -39,6 +41,11 @@ session = request.getSession(true);
 Boolean authenticated = false;
 if (session.getAttribute("authenticated") != null){
 	 authenticated = (boolean) session.getAttribute("authenticated");
+}
+if (session.getAttribute("username") != null){
+	 username = session.getAttribute("username").toString();
+	 User currentUser = userDao.getUserByUsername(username);
+	 currentUserID = currentUser.getId();
 }
 %>
 
@@ -109,8 +116,20 @@ if (session.getAttribute("authenticated") != null){
 		<%out.print(review.getContent());%>
 		</td>
 		<td>
-		<%out.print(review.getUsefulCount() + " Other users found this reivew helpful <br> Was this review Helpful?");%>
-		<a href="UpdateUsefulCount?reviewId=<%out.print(review.getID());%>&businessId=<%out.print(business.getId());%>" class="button">Yes</a>
+		<%out.print(review.getUsefulCount() + " Other users found this reivew helpful");
+		// If the user is authenticated they can see the button to indicate if a review was helpful or not.
+		if (authenticated){ 
+			out.print("<br>Was this review Helpful?");	
+			String buttonText = "Yes";
+			boolean userHasFoundUseful = userReviewUsefulService.checkUserReviewHelpfulRecord(currentUserID, review.getID());
+			if(userHasFoundUseful){
+				buttonText = "No";
+			}%>	
+			<a href="UpdateUsefulCount?reviewId=<%out.print(review.getID());%>&businessId=<%out.print(business.getId());%>" class="button"><%out.print(buttonText);%></a>
+		<%}%>
+		
+		
+		
 		</td>
 			
 		</tr>
