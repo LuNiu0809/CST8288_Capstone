@@ -55,7 +55,12 @@ public class ReviewServlet extends HttpServlet{
 		
 		 if (requestURI.contains("/UpdateUsefulCount")) {
 			// Update Review Useful Count		
-			updateUsefulCount(req, resp);
+			try {
+				updateUsefulCount(req, resp);
+			} catch (ServletException | IOException | SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		} else {
 			// Invalid URL
 			resp.sendError(HttpServletResponse.SC_NOT_FOUND);
@@ -145,8 +150,9 @@ public class ReviewServlet extends HttpServlet{
 	 * @param resp
 	 * @throws ServletException
 	 * @throws IOException
+	 * @throws SQLException 
 	 */
-	private void updateUsefulCount(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+	private void updateUsefulCount(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException, SQLException {
 		
 		Review review = new Review();
 		ReviewService reviewService = new ReviewService();
@@ -155,26 +161,36 @@ public class ReviewServlet extends HttpServlet{
 		
 		// Get current user ID
 		int userId = getCurrentUserID(req);
-
 		int reviewId = Integer.valueOf(req.getParameter("reviewId"));
+		
 		try {
 			review = reviewService.readReview(reviewId);
 		} catch (SQLException e) {
 			
 			e.printStackTrace();
 		}
-		review.increaseUsefulCount();
-		
+
+		// Check if the user has already found review helpful.
+		if (userReviewUsefulService.checkUserReviewHelpfulRecord(userId, reviewId)) {
+			review.decreaseUsefulCount();
+			// Remove Record and Check to make sure the User Review Useful Table was updated. 
+			if (userReviewUsefulService.deleteUserReviewHelpfulRecord(userId, reviewId) == 0) {
+				forwardToErrorPage(req, resp, "Error Updating Review Useful Count");
+			}
+			
+		} else {
+			review.increaseUsefulCount();
+			// Add Record and Check to make sure the User Review Useful Table was updated. 
+			if (userReviewUsefulService.addUserReviewHelpfulRecord(userId, reviewId) == 0) {
+				forwardToErrorPage(req, resp, "Error Updating Review Useful Count");
+			}
+		}
+			
 		// Check to make sure the review table was updated. 
 		if (reviewService.updateUsefulCount(reviewId, review.getUsefulCount()) == 0) {
 			forwardToErrorPage(req, resp, "Error Updating Review Useful Count");
 		}
-		
-		// Check to make sure the User Review Useful Table was updated. 
-		if (userReviewUsefulService.addUserReviewHelpfulRecord(userId, reviewId) == 0) {
-			forwardToErrorPage(req, resp, "Error Updating Review Useful Count");
-		}
-	
+			
 		RequestDispatcher rd = req.getRequestDispatcher("businessReviews.jsp?");
 		rd.forward(req, resp);
 

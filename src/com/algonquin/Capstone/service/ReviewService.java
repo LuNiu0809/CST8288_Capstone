@@ -45,6 +45,8 @@ public class ReviewService implements ReviewServiceInterface{
 	public ArrayList<Review> readAllReviews(int businessID) throws SQLException{
 		return reviewDao.readAllReviews(businessID);
 	}
+	
+	
 		
 		
 

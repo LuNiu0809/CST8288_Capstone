@@ -31,5 +31,6 @@ public class UserReviewUsefulService implements UserReviewUsefulInterface{
 		dao = new UserReviewUsefulDao();
 		return dao.checkUserReviewHelpfulRecord(userID, reviewID);
 	}
+	
 
 }
