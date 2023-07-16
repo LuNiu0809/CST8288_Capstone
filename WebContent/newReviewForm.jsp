@@ -28,7 +28,7 @@ business = businessService.readBusiness(businessId);
 
   <div class="review">
 <!--  <form action = "createNewReview.jsp" method = "POST"> -->
-	<form action = "CreateNewReviewServlet" method = "POST">
+	<form action = "CreateNewReview" method = "POST">
   
   
 		<table>
