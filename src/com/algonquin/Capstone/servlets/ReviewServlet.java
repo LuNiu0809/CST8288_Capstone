@@ -81,17 +81,35 @@ public class ReviewServlet extends HttpServlet{
 
 		// Set the review data from the Request. 
 		Review review = setReviewData(req);
+		
+		try {
+			// Create the new review in Database. 
+			int createStatus = reviewService.createReview(review);
+			
+			// If the review was successfully added to the database, update the business's overall ratings. 
+			if (createStatus > 0){
+				
+				BusinessService businessService = new BusinessService();
+				Business business = businessService.readBusiness(review.getBusinessID());
 
-		// Create the new review in Database. 
-		int createStatus = reviewService.createReview(review);
+				int businessUpdateStatus;
+				
+				businessUpdateStatus = businessService.updateRatings(business);
+				// If the business was successfully updated in the database return to the business reivews page.
+				if (businessUpdateStatus > 0){
+					RequestDispatcher rd = req.getRequestDispatcher("businessReviews.jsp?");
+					rd.forward(req, resp);
+				} else {
+					throw new Exception();
+				}
+			} else {	
+				throw new Exception();
+			}
 
-		// If the review was successfully added to the database return to the business reivews page.
-		if (createStatus > 0){
-			RequestDispatcher rd = req.getRequestDispatcher("businessReviews.jsp?");
-			rd.forward(req, resp);
-		} else {
+		} catch (Exception e) {
 			forwardToErrorPage(req, resp, "Error Creating new Review");
 		}
+
 
 	}
 	
