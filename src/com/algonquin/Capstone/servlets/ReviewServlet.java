@@ -123,7 +123,6 @@ public class ReviewServlet extends HttpServlet{
 	 */
 	private void updateUsefulCount(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException, SQLException {
 		
-		Review review = new Review();
 		ReviewService reviewService = new ReviewService();
 		
 		UserReviewUsefulService userReviewUsefulService = new UserReviewUsefulService();
@@ -133,35 +132,39 @@ public class ReviewServlet extends HttpServlet{
 		int reviewId = Integer.valueOf(req.getParameter("reviewId"));
 		
 		try {
-			review = reviewService.readReview(reviewId);
+			Review review = reviewService.readReview(reviewId);
+			// Check if the user has already found review helpful.
+			if (userReviewUsefulService.checkUserReviewHelpfulRecord(userId, reviewId)) {
+				review.decreaseUsefulCount();
+				// Remove Record and Check to make sure the User Review Useful Table was updated. 
+				if (userReviewUsefulService.deleteUserReviewHelpfulRecord(userId, reviewId) == 0) {
+					forwardToErrorPage(req, resp, "Error Updating Review Useful Count");
+				}
+				
+			} else {
+				review.increaseUsefulCount();
+				// Add Record and Check to make sure the User Review Useful Table was updated. 
+				if (userReviewUsefulService.addUserReviewHelpfulRecord(userId, reviewId) == 0) {
+					forwardToErrorPage(req, resp, "Error Updating Review Useful Count");
+				}
+			}
+				
+			// Check to make sure the review table was updated. 
+			if (reviewService.updateUsefulCount(reviewId, review.getUsefulCount()) == 0) {
+				forwardToErrorPage(req, resp, "Error Updating Review Useful Count");
+			}
+				
+			RequestDispatcher rd = req.getRequestDispatcher("businessReviews.jsp?");
+			rd.forward(req, resp);
+				
+			
 		} catch (SQLException e) {
 			
 			e.printStackTrace();
+			forwardToErrorPage(req, resp, "Error Updating useful count");
 		}
 
-		// Check if the user has already found review helpful.
-		if (userReviewUsefulService.checkUserReviewHelpfulRecord(userId, reviewId)) {
-			review.decreaseUsefulCount();
-			// Remove Record and Check to make sure the User Review Useful Table was updated. 
-			if (userReviewUsefulService.deleteUserReviewHelpfulRecord(userId, reviewId) == 0) {
-				forwardToErrorPage(req, resp, "Error Updating Review Useful Count");
-			}
-			
-		} else {
-			review.increaseUsefulCount();
-			// Add Record and Check to make sure the User Review Useful Table was updated. 
-			if (userReviewUsefulService.addUserReviewHelpfulRecord(userId, reviewId) == 0) {
-				forwardToErrorPage(req, resp, "Error Updating Review Useful Count");
-			}
-		}
-			
-		// Check to make sure the review table was updated. 
-		if (reviewService.updateUsefulCount(reviewId, review.getUsefulCount()) == 0) {
-			forwardToErrorPage(req, resp, "Error Updating Review Useful Count");
-		}
-			
-		RequestDispatcher rd = req.getRequestDispatcher("businessReviews.jsp?");
-		rd.forward(req, resp);
+		
 
 	}
 	
@@ -197,9 +200,7 @@ public class ReviewServlet extends HttpServlet{
 
 	}
 	
-	private Review setReviewData(HttpServletRequest req) {
-		
-		Review review = new Review();	
+	private Review setReviewData(HttpServletRequest req) {		
 		
 		// get review information from post.
 		int foodRating = Integer.valueOf(req.getParameter("foodRating"));
@@ -214,16 +215,15 @@ public class ReviewServlet extends HttpServlet{
 		// Get business ID
 		int businessId = Integer.valueOf(req.getParameter("businessId"));
 		
-		//Set review values
-		review.setAuthorID(userId);
-		review.setBusinessID(businessId);
-		review.setFoodRating(foodRating);
-		review.setServiceRating(serviceRating);
-		review.setAtmosphereRating(atmosphereRating);
-		review.setPriceRating(priceRating);
-		review.setContent(content);
-		review.generateCreationDate();
-		
+		Review review = new Review.Builder()	
+		.setAuthorID(userId)
+		.setBusinessID(businessId)
+		.setFoodRating(foodRating)
+		.setServiceRating(serviceRating)
+		.setAtmosphereRating(atmosphereRating)
+		.setPriceRating(priceRating)
+		.setContent(content)
+		.createNewReview();
 		return review;
 		
 	}

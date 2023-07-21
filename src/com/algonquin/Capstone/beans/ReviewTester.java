@@ -12,7 +12,16 @@ import org.junit.jupiter.api.Test;
  */
 class ReviewTester {
 	
-	Review testReview = new Review();
+	Review testReview = new Review.Builder()			
+	.setAuthorID(1)
+	.setBusinessID(1)								
+	.setContent("test Content")
+	.setPriceRating(1)				
+	.setFoodRating(1)
+	.setServiceRating(1)
+	.setAtmosphereRating(1)
+	.createNewReview();
+			
 
 	/**
 	 * Test the increase helpful count function
@@ -46,39 +55,44 @@ class ReviewTester {
 		assertEquals(2, testReview.getUsefulCount());
 	}
 	
-	/**
-	 * Test getting the default overall rating
-	 */
-	@Test
-	void testDefaultOverallRating() {
-		
-		assertEquals(0, testReview.getOverallRating());
-	}
+
 	
 	/**
 	 * Test the calculating the overall rating
 	 */
 	@Test
 	void testCalculateOverallRating3() {
-		
-		testReview.setFoodRating(3);
-		testReview.setAtmosphereRating(3);
-		testReview.setServiceRating(3);
-		
-		assertEquals(3, testReview.getOverallRating());
+
+		Review testReview3 = new Review.Builder()			
+				.setAuthorID(1)
+				.setBusinessID(1)								
+				.setContent("test Content")
+				.setPriceRating(1)				
+				.setFoodRating(3)
+				.setServiceRating(3)
+				.setAtmosphereRating(3)
+				.createNewReview();
+
+		assertEquals(3, testReview3.getOverallRating());
 	}
-	
+
 	/**
 	 * Test the calculating the overall rating
 	 */
 	@Test
-	void testCalculateOverallRating0() {
+	void testCalculateOverallRating1() {
 		
-		testReview.setFoodRating(0);
-		testReview.setAtmosphereRating(0);
-		testReview.setServiceRating(0);
+		Review testReview0 = new Review.Builder()			
+				.setAuthorID(1)
+				.setBusinessID(1)								
+				.setContent("test Content")
+				.setPriceRating(1)				
+				.setFoodRating(1)
+				.setServiceRating(1)
+				.setAtmosphereRating(1)
+				.createNewReview();
 		
-		assertEquals(0, testReview.getOverallRating());
+		assertEquals(1, testReview0.getOverallRating());
 	}
 	
 	/**
@@ -87,11 +101,17 @@ class ReviewTester {
 	@Test
 	void testCalculateOverallRating5() {
 		
-		testReview.setFoodRating(5);
-		testReview.setAtmosphereRating(5);
-		testReview.setServiceRating(5);
+		Review testReview5 = new Review.Builder()			
+				.setAuthorID(1)
+				.setBusinessID(1)								
+				.setContent("test Content")
+				.setPriceRating(1)				
+				.setFoodRating(5)
+				.setServiceRating(5)
+				.setAtmosphereRating(5)
+				.createNewReview();
 		
-		assertEquals(5, testReview.getOverallRating());
+		assertEquals(5, testReview5.getOverallRating());
 	}
 	
 	/**
@@ -100,11 +120,17 @@ class ReviewTester {
 	@Test
 	void testCalculateOverallRating4() {
 		
-		testReview.setFoodRating(5);
-		testReview.setAtmosphereRating(4);
-		testReview.setServiceRating(4);
+		Review testReview4 = new Review.Builder()			
+				.setAuthorID(1)
+				.setBusinessID(1)								
+				.setContent("test Content")
+				.setPriceRating(1)				
+				.setFoodRating(5)
+				.setServiceRating(4)
+				.setAtmosphereRating(4)
+				.createNewReview();
 		
-		assertEquals(4, testReview.getOverallRating());
+		assertEquals(4, testReview4.getOverallRating());
 	}
 	
 	/**
@@ -113,11 +139,17 @@ class ReviewTester {
 	@Test
 	void testCalculateOverallRating4_1() {
 		
-		testReview.setFoodRating(5);
-		testReview.setAtmosphereRating(5);
-		testReview.setServiceRating(4);
+		Review testReview4_1 = new Review.Builder()			
+				.setAuthorID(1)
+				.setBusinessID(1)								
+				.setContent("test Content")
+				.setPriceRating(1)				
+				.setFoodRating(5)
+				.setServiceRating(5)
+				.setAtmosphereRating(4)
+				.createNewReview();
 		
-		assertEquals(4, testReview.getOverallRating());
+		assertEquals(4, testReview4_1.getOverallRating());
 	}
 	
 	/**
@@ -126,31 +158,21 @@ class ReviewTester {
 	@Test
 	void testCalculateOverallRating3_1() {
 		
-		testReview.setFoodRating(5);
-		testReview.setAtmosphereRating(3);
-		testReview.setServiceRating(1);
+		Review testReview3_1 = new Review.Builder()			
+				.setAuthorID(1)
+				.setBusinessID(1)								
+				.setContent("test Content")
+				.setPriceRating(1)				
+				.setFoodRating(5)
+				.setServiceRating(3)
+				.setAtmosphereRating(1)
+				.createNewReview();
 		
-		assertEquals(3, testReview.getOverallRating());
+		assertEquals(3, testReview3_1.getOverallRating());
 	}
 	
 	
-	/**
-	 * Test setting a rating too high
-	 */
-	@Test
-	void testTooHighRatingValue() {
-		assertThrows(IllegalArgumentException.class, () ->testReview.setFoodRating(6));
 
-	}
-	
-	/**
-	 * Test setting a rating too low
-	 */
-	@Test
-	void testTooLowRatingValue() {
-		assertThrows(IllegalArgumentException.class, () ->testReview.setFoodRating(-1));
-
-	}
 	
 	
 	
