@@ -19,7 +19,15 @@ import com.algonquin.Capstone.beans.User;
  */
 class ReviewDaoTester {
 	
-	Review testReview = new Review();
+	Review testReview = new Review.Builder()			
+	.setAuthorID(1)
+	.setBusinessID(1)								
+	.setContent("test Content")
+	.setPriceRating(1)				
+	.setFoodRating(1)
+	.setServiceRating(1)
+	.setAtmosphereRating(1)
+	.createNewReview();
 	ReviewDao reviewDao = new ReviewDao();
 	User testUser = new User();
 	Business testBusiness = new Business();
@@ -32,17 +40,17 @@ class ReviewDaoTester {
 	@Test
 	void testInsertReview() {
 		
-	
-		testReview.setAuthorID(1);
-		testReview.setBusinessID(2);
-		testReview.setContent("Test Review Content");
-		testReview.setAtmosphereRating(1);
-		testReview.setFoodRating(2);
-		testReview.setServiceRating(3);
-		testReview.setPriceRating(4); 
-		testReview.generateCreationDate();
+		Review testInsertReview = new Review.Builder()			
+				.setAuthorID(1)
+				.setBusinessID(2)								
+				.setContent("test Review Content")
+				.setPriceRating(4)				
+				.setFoodRating(2)
+				.setServiceRating(3)
+				.setAtmosphereRating(1)
+				.createNewReview();
 		
-		assertEquals(1, reviewDao.createReview(testReview));  
+		assertEquals(1, reviewDao.createReview(testInsertReview));  
 		
 	}
 	
@@ -55,55 +63,60 @@ class ReviewDaoTester {
 		ArrayList<Review> reviewList = new ArrayList<>();
 		
 		// Insert 5 reviews for the business 
-		testReview.setAuthorID(1);
-		testReview.setBusinessID(2);
-		testReview.setContent("Test Review Content 1");
-		testReview.setAtmosphereRating(1);
-		testReview.setFoodRating(1);
-		testReview.setServiceRating(1);
-		testReview.setPriceRating(1); 
-		testReview.generateCreationDate();
-		reviewDao.createReview(testReview);
+		Review testReview1 = new Review.Builder()	
+		.setAuthorID(1)
+		.setBusinessID(2)
+		.setContent("Test Review Content 1")
+		.setAtmosphereRating(1)
+		.setFoodRating(1)
+		.setServiceRating(1)
+		.setPriceRating(1)
+		.createNewReview();
+		reviewDao.createReview(testReview1);
 		
-		testReview.setAuthorID(1);
-		testReview.setBusinessID(2);
-		testReview.setContent("Test Review Content 2");
-		testReview.setAtmosphereRating(2);
-		testReview.setFoodRating(2);
-		testReview.setServiceRating(2);
-		testReview.setPriceRating(2); 
-		testReview.generateCreationDate();
-		reviewDao.createReview(testReview);
+		Review testReview2 = new Review.Builder()	
+		.setAuthorID(1)
+		.setBusinessID(2)
+		.setContent("Test Review Content 2")
+		.setAtmosphereRating(2)
+		.setFoodRating(2)
+		.setServiceRating(2)
+		.setPriceRating(2)
+		.createNewReview();
+		reviewDao.createReview(testReview2);
 		
-		testReview.setAuthorID(1);
-		testReview.setBusinessID(2);
-		testReview.setContent("Test Review Content 3");
-		testReview.setAtmosphereRating(3);
-		testReview.setFoodRating(3);
-		testReview.setServiceRating(3);
-		testReview.setPriceRating(3); 
-		testReview.generateCreationDate();
-		reviewDao.createReview(testReview);
+		Review testReview3 = new Review.Builder()	
+		.setAuthorID(1)
+		.setBusinessID(2)
+		.setContent("Test Review Content 3")
+		.setAtmosphereRating(3)
+		.setFoodRating(3)
+		.setServiceRating(3)
+		.setPriceRating(3)
+		.createNewReview();	
+		reviewDao.createReview(testReview3);
 		
-		testReview.setAuthorID(1);
-		testReview.setBusinessID(2);
-		testReview.setContent("Test Review Content 4");
-		testReview.setAtmosphereRating(4);
-		testReview.setFoodRating(4);
-		testReview.setServiceRating(4);
-		testReview.setPriceRating(4); 
-		testReview.generateCreationDate();
-		reviewDao.createReview(testReview);
+		Review testReview4 = new Review.Builder()	
+		.setAuthorID(1)
+		.setBusinessID(2)
+		.setContent("Test Review Content 4")
+		.setAtmosphereRating(4)
+		.setFoodRating(4)
+		.setServiceRating(4)
+		.setPriceRating(4)
+		.createNewReview();
+		reviewDao.createReview(testReview4);
 		
-		testReview.setAuthorID(1);
-		testReview.setBusinessID(2);
-		testReview.setContent("Test Review Content 5");
-		testReview.setAtmosphereRating(5);
-		testReview.setFoodRating(5);
-		testReview.setServiceRating(5);
-		testReview.setPriceRating(5); 
-		testReview.generateCreationDate();
-		reviewDao.createReview(testReview);
+		Review testReview5 = new Review.Builder()	
+		.setAuthorID(1)
+		.setBusinessID(2)
+		.setContent("Test Review Content 5")
+		.setAtmosphereRating(5)
+		.setFoodRating(5)
+		.setServiceRating(5)
+		.setPriceRating(5)
+		.createNewReview();
+		reviewDao.createReview(testReview5);
 		
 		
 		try {
@@ -128,16 +141,15 @@ class ReviewDaoTester {
 	@Test
 	void testReadReview() {
 		
-		Review testReadReview = new Review();
-
-		testReview.setAuthorID(1);
-		testReview.setBusinessID(2);
-		testReview.setContent("Test read review content");
-		testReview.setAtmosphereRating(5);
-		testReview.setFoodRating(5);
-		testReview.setServiceRating(5);
-		testReview.setPriceRating(5); 
-		testReview.generateCreationDate();
+		Review testReadReview = new Review.Builder()
+		.setAuthorID(1)
+		.setBusinessID(2)
+		.setContent("Test read review content")
+		.setAtmosphereRating(5)
+		.setFoodRating(5)
+		.setServiceRating(5)
+		.setPriceRating(5)
+		.createNewReview();
 		
 		reviewDao.createReview(testReview);
 		
@@ -159,21 +171,20 @@ class ReviewDaoTester {
 	@Test
 	void testdeleteReviews() {
 		
-
-		testReview.setAuthorID(1);
-		testReview.setBusinessID(2);
-		testReview.setContent("Test Review Content delete");
-		testReview.setAtmosphereRating(5);
-		testReview.setFoodRating(5);
-		testReview.setServiceRating(5);
-		testReview.setPriceRating(5); 
-		testReview.generateCreationDate();
-		reviewDao.createReview(testReview);
+		Review testDeleteReview1 = new Review.Builder()			
+		.setAuthorID(1)
+		.setBusinessID(2)
+		.setContent("Test Review Content delete")
+		.setAtmosphereRating(5)
+		.setFoodRating(5)
+		.setServiceRating(5)
+		.setPriceRating(5)
+		.createNewReview();
+		reviewDao.createReview(testDeleteReview1);
 		int deleteID = reviewDao.getlastReviewID();
 		
-		Review testDeleteReview = new Review();
 		try {
-			testDeleteReview = reviewDao.readReview(deleteID);
+			Review testDeleteReview = reviewDao.readReview(deleteID);
 			//testDeleteReview.printReviewToConsole();			
 			assertNotEquals(0, reviewDao.deleteReview(deleteID));		
 			//testDeleteReview = reviewDao.readReview(deleteID);
@@ -190,21 +201,20 @@ class ReviewDaoTester {
 	
 	@Test
 	void testUpdateUsefulCOunt() {
-		
-		testReview.setAuthorID(1);
-		testReview.setBusinessID(2);
-		testReview.setContent("update useful Content ");
-		testReview.setAtmosphereRating(5);
-		testReview.setFoodRating(5);
-		testReview.setServiceRating(5);
-		testReview.setPriceRating(5); 
-		testReview.generateCreationDate();
-		reviewDao.createReview(testReview);
+		Review testUpdateReview1 = new Review.Builder()	
+		.setAuthorID(1)
+		.setBusinessID(2)
+		.setContent("update useful Content ")
+		.setAtmosphereRating(5)
+		.setFoodRating(5)
+		.setServiceRating(5)
+		.setPriceRating(5) 
+		.createNewReview();
+		reviewDao.createReview(testUpdateReview1);
 		int updateID = reviewDao.getlastReviewID();
 		
-		Review testUpdateReview = new Review();
 		try {
-			testUpdateReview = reviewDao.readReview(updateID);
+			Review testUpdateReview = reviewDao.readReview(updateID);
 			//testUpdateReview.printReviewToConsole();
 			assertEquals(0, testUpdateReview.getUsefulCount());
 			

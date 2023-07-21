@@ -110,20 +110,15 @@ public class ReviewDao implements ReviewServiceInterface{
 				atmosphereRating = rs.getInt("AtmosphereRating");
 				usefulCount = rs.getInt("UsefulCount"); 
 
-				Review review = new Review();
-
-				review.setID(id);
-				review.setAuthorID(user_ID);
-				review.setBusinessID(business_ID);
-				review.setCreationDate(date);				
-				review.setContent(content);
-				review.setPriceRating(priceRating); 
-				review.setOverallRating(overallRating);
-				review.setFoodRating(foodRating);
-				review.setServiceRating(serviceRating);
-				review.setAtmosphereRating(atmosphereRating);
-				review.setUsefulCount(usefulCount);
-
+				Review review = new Review.Builder()			
+				.setAuthorID(user_ID)
+				.setBusinessID(business_ID)								
+				.setContent(content)
+				.setPriceRating(priceRating)				
+				.setFoodRating(foodRating)
+				.setServiceRating(serviceRating)
+				.setAtmosphereRating(atmosphereRating)
+				.createExistingReview(id, overallRating, date, usefulCount);
 
 				reviewList.add(review);
 
@@ -190,20 +185,15 @@ public class ReviewDao implements ReviewServiceInterface{
 				atmosphereRating = rs.getInt("AtmosphereRating");
 				usefulCount = rs.getInt("UsefulCount"); 
 
-				Review review = new Review();
-
-				review.setID(id);
-				review.setAuthorID(user_ID);
-				review.setBusinessID(business_ID);
-				review.setCreationDate(date);				
-				review.setContent(content);
-				review.setPriceRating(priceRating); 
-				review.setOverallRating(overallRating);
-				review.setFoodRating(foodRating);
-				review.setServiceRating(serviceRating);
-				review.setAtmosphereRating(atmosphereRating);
-				review.setUsefulCount(usefulCount);
-
+				Review review = new Review.Builder()			
+				.setAuthorID(user_ID)
+				.setBusinessID(business_ID)								
+				.setContent(content)
+				.setPriceRating(priceRating)				
+				.setFoodRating(foodRating)
+				.setServiceRating(serviceRating)
+				.setAtmosphereRating(atmosphereRating)
+				.createExistingReview(id, overallRating, date, usefulCount);
 
 				reviewList.add(review);
 
@@ -243,7 +233,7 @@ public class ReviewDao implements ReviewServiceInterface{
 			
 			rs = readReview.executeQuery();
 			
-			Review review = new Review();
+			//Review review = new Review();
 
 			int id = 0;
 			int user_ID = 0;
@@ -272,22 +262,19 @@ public class ReviewDao implements ReviewServiceInterface{
 				usefulCount = rs.getInt("UsefulCount"); 
 
 				
-
-				review.setID(id);
-				review.setAuthorID(user_ID);
-				review.setBusinessID(business_ID);
-				review.setCreationDate(date);				
-				review.setContent(content);
-				review.setPriceRating(priceRating); 
-				review.setOverallRating(overallRating);
-				review.setFoodRating(foodRating);
-				review.setServiceRating(serviceRating);
-				review.setAtmosphereRating(atmosphereRating);
-				review.setUsefulCount(usefulCount);
-
+				Review review = new Review.Builder()			
+				.setAuthorID(user_ID)
+				.setBusinessID(business_ID)								
+				.setContent(content)
+				.setPriceRating(priceRating)				
+				.setFoodRating(foodRating)
+				.setServiceRating(serviceRating)
+				.setAtmosphereRating(atmosphereRating)
+				.createExistingReview(id, overallRating, date, usefulCount);
+				return review;	
 
 			}		
-			return review;					
+
 			
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
