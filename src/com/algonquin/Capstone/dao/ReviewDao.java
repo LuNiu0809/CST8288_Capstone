@@ -17,8 +17,7 @@ import com.algonquin.Capstone.service.ReviewServiceInterface;
  * Manages interactions to the Review Table in the database 
  */
 public class ReviewDao implements ReviewServiceInterface{
-	
-	
+		
 	
 	@Override
 	public synchronized int createReview(Review review) {
@@ -67,7 +66,7 @@ public class ReviewDao implements ReviewServiceInterface{
 		try (
 				// Create DB Connection
 				Connection connection = DBConnection.getConnectionToDatabase();	
-				
+
 				// Create select statement 
 				PreparedStatement readReview = connection.prepareStatement(
 						"SELECT id, user_ID, business_ID, Date, Content, PriceRating, OverallRating, FoodRating, ServiceRating, AtmosphereRating, UsefulCount"						
@@ -77,51 +76,15 @@ public class ReviewDao implements ReviewServiceInterface{
 								+ " LIMIT ?;"		
 						);
 				) {
-					
+
 			readReview.setInt(1, businessID);
 			readReview.setInt(2, numReviews);
-			
 			rs = readReview.executeQuery();
-			
+
 			ArrayList<Review> reviewList = new ArrayList<>();
-			int id = 0;
-			int user_ID = 0;
-			int business_ID = 0;
-			Date date = null;
-			String content = "";
-			int priceRating = 0;
-			int overallRating = 0;
-			int foodRating = 0;
-			int serviceRating = 0;
-			int atmosphereRating = 0;
-			int usefulCount = 0;
-
 			while (rs.next()) {
-
-				id = rs.getInt("id");
-				user_ID = rs.getInt("user_ID");
-				business_ID = rs.getInt("business_ID");			 			
-				date = rs.getDate("Date");
-				content = rs.getString("Content");
-				priceRating = rs.getInt("PriceRating");
-				overallRating = rs.getInt("OverallRating");
-				foodRating = rs.getInt("FoodRating");
-				serviceRating = rs.getInt("ServiceRating");
-				atmosphereRating = rs.getInt("AtmosphereRating");
-				usefulCount = rs.getInt("UsefulCount"); 
-
-				Review review = new Review.Builder()			
-				.setAuthorID(user_ID)
-				.setBusinessID(business_ID)								
-				.setContent(content)
-				.setPriceRating(priceRating)				
-				.setFoodRating(foodRating)
-				.setServiceRating(serviceRating)
-				.setAtmosphereRating(atmosphereRating)
-				.createExistingReview(id, overallRating, date, usefulCount);
-
+				Review review = getReviewFromResultSet(rs);
 				reviewList.add(review);
-
 			}		
 			return reviewList;					
 			
@@ -154,49 +117,12 @@ public class ReviewDao implements ReviewServiceInterface{
 						);
 				) {
 					
-			readReview.setInt(1, businessID);
-			
-			rs = readReview.executeQuery();
-			
+			readReview.setInt(1, businessID);			
+			rs = readReview.executeQuery();			
 			ArrayList<Review> reviewList = new ArrayList<>();
-			int id = 0;
-			int user_ID = 0;
-			int business_ID = 0;
-			Date date = null;
-			String content = "";
-			int priceRating = 0;
-			int overallRating = 0;
-			int foodRating = 0;
-			int serviceRating = 0;
-			int atmosphereRating = 0;
-			int usefulCount = 0;
-
-			while (rs.next()) {
-
-				id = rs.getInt("id");
-				user_ID = rs.getInt("user_ID");
-				business_ID = rs.getInt("business_ID");			 			
-				date = rs.getDate("Date");
-				content = rs.getString("Content");
-				priceRating = rs.getInt("PriceRating");
-				overallRating = rs.getInt("OverallRating");
-				foodRating = rs.getInt("FoodRating");
-				serviceRating = rs.getInt("ServiceRating");
-				atmosphereRating = rs.getInt("AtmosphereRating");
-				usefulCount = rs.getInt("UsefulCount"); 
-
-				Review review = new Review.Builder()			
-				.setAuthorID(user_ID)
-				.setBusinessID(business_ID)								
-				.setContent(content)
-				.setPriceRating(priceRating)				
-				.setFoodRating(foodRating)
-				.setServiceRating(serviceRating)
-				.setAtmosphereRating(atmosphereRating)
-				.createExistingReview(id, overallRating, date, usefulCount);
-
+			while (rs.next()) {				
+				Review review = getReviewFromResultSet(rs);
 				reviewList.add(review);
-
 			}		
 			return reviewList;					
 			
@@ -229,50 +155,10 @@ public class ReviewDao implements ReviewServiceInterface{
 						);
 				) {
 				
-			readReview.setInt(1, reviewID);
-			
-			rs = readReview.executeQuery();
-			
-			//Review review = new Review();
-
-			int id = 0;
-			int user_ID = 0;
-			int business_ID = 0;
-			Date date = null;
-			String content = "";
-			int priceRating = 0;
-			int overallRating = 0;
-			int foodRating = 0;
-			int serviceRating = 0;
-			int atmosphereRating = 0;
-			int usefulCount = 0;
-
-			while (rs.next()) {
-
-				id = rs.getInt("id");
-				user_ID = rs.getInt("user_ID");
-				business_ID = rs.getInt("business_ID");			 			
-				date = rs.getDate("Date");
-				content = rs.getString("Content");
-				priceRating = rs.getInt("PriceRating");
-				overallRating = rs.getInt("OverallRating");
-				foodRating = rs.getInt("FoodRating");
-				serviceRating = rs.getInt("ServiceRating");
-				atmosphereRating = rs.getInt("AtmosphereRating");
-				usefulCount = rs.getInt("UsefulCount"); 
-
-				
-				Review review = new Review.Builder()			
-				.setAuthorID(user_ID)
-				.setBusinessID(business_ID)								
-				.setContent(content)
-				.setPriceRating(priceRating)				
-				.setFoodRating(foodRating)
-				.setServiceRating(serviceRating)
-				.setAtmosphereRating(atmosphereRating)
-				.createExistingReview(id, overallRating, date, usefulCount);
-				return review;	
-
+			readReview.setInt(1, reviewID);			
+			rs = readReview.executeQuery();		
+			while (rs.next()) {				
+				return getReviewFromResultSet(rs);
 			}		
 
 			
@@ -365,6 +251,46 @@ public class ReviewDao implements ReviewServiceInterface{
 			e.printStackTrace();
 			return 0;		
 		} 
+		
+	}
+	
+	/**
+	 * Returns a review object from a provided result set read from the database. 
+	 * @param rs the result set read from the database. 
+	 * @return the review object.
+	 * @throws SQLException
+	 */
+	private synchronized Review getReviewFromResultSet(ResultSet rs) throws SQLException {
+		
+		if (rs != null) {
+			int id = rs.getInt("id");
+			int user_ID = rs.getInt("user_ID");
+			int business_ID = rs.getInt("business_ID");			 			
+			Date date = rs.getDate("Date");
+			String content = rs.getString("Content");
+			int priceRating = rs.getInt("PriceRating");
+			int overallRating = rs.getInt("OverallRating");
+			int foodRating = rs.getInt("FoodRating");
+			int serviceRating = rs.getInt("ServiceRating");
+			int atmosphereRating = rs.getInt("AtmosphereRating");
+			int usefulCount = rs.getInt("UsefulCount"); 
+		
+			Review review = new Review.Builder()			
+			.setAuthorID(user_ID)
+			.setBusinessID(business_ID)								
+			.setContent(content)
+			.setPriceRating(priceRating)				
+			.setFoodRating(foodRating)
+			.setServiceRating(serviceRating)
+			.setAtmosphereRating(atmosphereRating)
+			.createExistingReview(id, overallRating, date, usefulCount);
+			return review;
+			
+		} else {
+			return null;
+		}
+		
+			
 		
 	}
 	

@@ -77,46 +77,10 @@ public class BusinessDao implements BusinessServiceInterface{
 			rs = readBusiness.executeQuery();
 
 			ArrayList<Business> businessList = new ArrayList<>();
-			int id = 0;
-			String name = "";
-			String address = "";
-			String description = "";
-			String phoneNumber = "";
-			String email = "";			
-			int overallRating = 0;
-			int priceRating = 0;
-			String foodType = "";
-			String hoursOfOperation = "";	
 
-			while (rs.next()) {
-
-				id = rs.getInt("id");
-				name = rs.getString("Name");
-				address = rs.getString("Address");
-				description = rs.getString("Description");
-				phoneNumber = rs.getString("PhoneNumber");
-				email = rs.getString("Email");
-				overallRating = rs.getInt("OverallRating");			
-				priceRating = rs.getInt("PriceRating");
-				foodType = rs.getString("FoodType");
-				hoursOfOperation = rs.getString("HoursOfOperation");
-
-
-				Business business = new Business();
-
-				business.setId(id);
-				business.setName(name);
-				business.setAddress(address);
-				business.setDescription(description);
-				business.setPhoneNumber(phoneNumber);
-				business.setEmail(email);
-				business.setOverallRating(overallRating);				
-				business.setPriceRating(priceRating); 
-				business.setFoodType(foodType);
-				business.setHoursOfOperation(hoursOfOperation);
-
+			while (rs.next()) {				
+				Business business =  getBusinessFromResultSet(rs);
 				businessList.add(business);
-
 			}		
 			return businessList;					
 
@@ -145,52 +109,15 @@ public class BusinessDao implements BusinessServiceInterface{
 				PreparedStatement readBusiness = connection.prepareStatement(
 						"SELECT id, Name, Address, Description, PhoneNumber, Email, OverallRating, PriceRating, FoodType, HoursOfOperation" 						
 								+ " FROM business "
-								+ " WHERE id = ?" 
-										
+								+ " WHERE id = ?" 								
 						);
 				) {							
 			readBusiness.setInt(1, businessID);
 			rs = readBusiness.executeQuery();
-			Business business = new Business();
-			
-			int id = 0;
-			String name = "";
-			String address = "";
-			String description = "";
-			String phoneNumber = "";
-			String email = "";			
-			int overallRating = 0;
-			int priceRating = 0;
-			String foodType = "";
-			String hoursOfOperation = "";	
 
-			while (rs.next()) {
-
-				id = rs.getInt("id");
-				name = rs.getString("Name");
-				address = rs.getString("Address");
-				description = rs.getString("Description");
-				phoneNumber = rs.getString("PhoneNumber");
-				email = rs.getString("Email");
-				overallRating = rs.getInt("OverallRating");			
-				priceRating = rs.getInt("PriceRating");
-				foodType = rs.getString("FoodType");
-				hoursOfOperation = rs.getString("HoursOfOperation");
-
-				business.setId(id);
-				business.setName(name);
-				business.setAddress(address);
-				business.setDescription(description);
-				business.setPhoneNumber(phoneNumber);
-				business.setEmail(email);
-				business.setOverallRating(overallRating);				
-				business.setPriceRating(priceRating); 
-				business.setFoodType(foodType);
-				business.setHoursOfOperation(hoursOfOperation);
-
-
-			}		
-			return business;					
+			while (rs.next()) {				
+				return getBusinessFromResultSet(rs);
+			}										
 			
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
@@ -279,6 +206,48 @@ public class BusinessDao implements BusinessServiceInterface{
 			e.printStackTrace();
 			return 0;		
 		} 
+		
+	}
+	
+	/**
+	 * Returns a Business object from a provided result set read from the database. 
+	 * @param rs the result set
+	 * @return The business object.
+	 * @throws SQLException
+	 */
+	private synchronized Business getBusinessFromResultSet(ResultSet rs) throws SQLException {
+		
+		if (rs != null) {
+			Business business = new Business();
+
+			int id = rs.getInt("id");
+			String name = rs.getString("Name");
+			String address = rs.getString("Address");
+			String description = rs.getString("Description");
+			String phoneNumber = rs.getString("PhoneNumber");
+			String email = rs.getString("Email");
+			int overallRating = rs.getInt("OverallRating");			
+			int priceRating = rs.getInt("PriceRating");
+			String foodType = rs.getString("FoodType");
+			String hoursOfOperation = rs.getString("HoursOfOperation");
+
+			business.setId(id);
+			business.setName(name);
+			business.setAddress(address);
+			business.setDescription(description);
+			business.setPhoneNumber(phoneNumber);
+			business.setEmail(email);
+			business.setOverallRating(overallRating);				
+			business.setPriceRating(priceRating); 
+			business.setFoodType(foodType);
+			business.setHoursOfOperation(hoursOfOperation);
+			
+			return business;
+			
+		} else {
+			return null;
+		}
+				
 		
 	}
 

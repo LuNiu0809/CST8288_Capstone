@@ -46,13 +46,6 @@ public class Review {
 		usefulCount = builder.usefulCount;
 	}
 	
-//	/**
-//	 * sets the ID for this review, used when reading a review for the database. 
-//	 * @param id the id. 
-//	 */
-//	public void setID(int id) {
-//		this.id = id;
-//	}
 	
 	/**
 	 * gets the id of this review. 
@@ -62,13 +55,6 @@ public class Review {
 		return id;
 	}
 	
-//	/**
-//	 * Sets the author ID for this review
-//	 * @param author the ID of the author of this review
-//	 */
-//	public void setAuthorID(int authorID) {
-//		this.authorID = authorID;
-//	}
 	
 	/**
 	 * Gets the author ID of this review
@@ -78,13 +64,6 @@ public class Review {
 		return authorID;
 	}
 	
-//	/**
-//	 * Sets the business ID that is being reviewed. 
-//	 * @param business the business ID
-//	 */
-//	public void setBusinessID(int businessID) {
-//		this.businessID = businessID;
-//	}
 	
 	/**
 	 * Gets the business ID that is being reviewed. 
@@ -94,13 +73,6 @@ public class Review {
 		return businessID;
 	}
 	
-//	/**
-//	 * Sets the content for this review
-//	 * @param content
-//	 */
-//	public void setContent(String content) {
-//		this.content = content;
-//	}
 	
 	/**
 	 * Gets the content of the review. 
@@ -110,14 +82,6 @@ public class Review {
 		return content;
 	}
 	
-//	/**
-//	 * Sets the price rating for this review.
-//	 * @param rating the rating. 
-//	 */
-//	public void setPriceRating (int rating) {
-//		
-//		priceRating.setRating(rating);
-//	}
 	
 	/**
 	 * Gets the price rating of this review. 
@@ -127,15 +91,6 @@ public class Review {
 		return priceRating.getRating();
 	}
 	
-//	/**
-//	 * Sets the food rating for this review.
-//	 * @param rating the rating. 
-//	 */
-//	public void setFoodRating (int rating) {
-//		
-//		foodRating.setRating(rating);
-//		calculateOverallRating();
-//	}
 	
 	/**
 	 * Gets the food rating of this review
@@ -145,16 +100,7 @@ public class Review {
 		return foodRating.getRating();
 	}
 	
-//	/**
-//	 * Sets the service rating for this review.
-//	 * @param rating the service rating. 
-//	 */
-//	public void setServiceRating (int rating) {
-//		
-//		serviceRating.setRating(rating);
-//		calculateOverallRating();
-//	}
-	
+
 	/**
 	 * gets the service rating for this review.
 	 * @return the service rating
@@ -162,17 +108,7 @@ public class Review {
 	public int getServiceRating() {
 		return serviceRating.getRating();
 	}
-	
-//	/**
-//	 * Sets the atmosphere rating for this review.
-//	 * @param rating the rating. 
-//	 */
-//	public void setAtmosphereRating (int rating) {
-//		
-//		atmosphereRating.setRating(rating);
-//		calculateOverallRating();
-//	}
-	
+		
 	/**
 	 * gets the atmosphere rating for this review. 
 	 * @return the atmosphere rating. 
@@ -190,14 +126,6 @@ public class Review {
 	public int getOverallRating() {
 		return overallRating.getRating();
 	}
-	
-//	/**
-//	 * Sets the overall rating of this review, used when reading from the database
-//	 * @param rating the rating
-//	 */
-//	public void setOverallRating(int rating) {
-//		overallRating.setRating(rating);
-//	}
 	
 
 	/**
@@ -224,25 +152,6 @@ public class Review {
 			usefulCount = MIN_USEFUL_COUNT;
 		} 
 	}
-	
-//	/**
-//	 * sets the helpfulcount for this review, used when reading from the database. 
-//	 * @param count the count
-//	 */
-//	public void setUsefulCount(int count) {
-//		usefulCount = count;
-//	}
-
-	
-
-	
-//	/**
-//	 * Sets the creation date for this review, used when reading from the database. 
-//	 * @param date the date
-//	 */
-//	public void setCreationDate(Date date) {
-//		creationDate = date;
-//	}
 	
 	/**
 	 * gets the creation date for this post. 
