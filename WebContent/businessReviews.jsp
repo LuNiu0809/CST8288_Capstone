@@ -25,9 +25,35 @@ UserReviewUsefulService userReviewUsefulService = new UserReviewUsefulService();
 
 business = businessService.readBusiness(businessId);
 
+int numReviews;
+String sortingString = "";
+EnumRatingSort ratingSort;
+
+//Get number of restuarants to view, if not set use default value. 
+if(request.getParameter("numReviews") != null){
+	numReviews = Integer.valueOf(request.getParameter("numReviews"));
+} else numReviews = 5; 
+
+//Get sorting, if not set use default value
+if(request.getParameter("sorting") != null){
+	sortingString = request.getParameter("sorting");
+	switch (sortingString){
+	case "Rating High To Low" : ratingSort = EnumRatingSort.OVERALL_RATING_HIGH_LOW; break;
+	case "Rating: Low To High" : ratingSort = EnumRatingSort.OVERALL_RATING_LOW_HIGH; break;
+	case "Price: High To Low" : ratingSort = EnumRatingSort.PRICE_RATING_HIGH_LOW; break;
+	case "Price: Low To High" : ratingSort = EnumRatingSort.PRICE_RATING_LOW_HIGH; break;
+	default : ratingSort = EnumRatingSort.OVERALL_RATING_HIGH_LOW;
+	}
+} else {
+	ratingSort = EnumRatingSort.OVERALL_RATING_HIGH_LOW;
+	sortingString = "Rating High To Low";
+}
+
+
+
 ArrayList<Review> reviewList = new ArrayList<>();
 ReviewService reviewService = new ReviewService();
-reviewList = reviewService.readNumReviews(businessId, 5);
+reviewList = reviewService.readNumReviews(businessId, numReviews, ratingSort);
 
 UserDao userDao = new UserDao();
 int currentUserID = 0;
@@ -52,6 +78,32 @@ if (session.getAttribute("username") != null){
 	<h1>
 		<%out.print(business.getName());%>
 	</h1>
+	<!-- Select the number of Reviews to view -->
+	<form action = "businessReviews.jsp" method = "post">
+	<label for="numReviews">Select Number of Restaurants</label>
+		<select name="numReviews" id="numReviews" onchange="this.form.submit()">
+			<option selected ="selected"><%out.print(numReviews);%></option>
+			<option value = 5>5</option>
+			<option value = 10>10</option>
+			<option value = 25>25</option>
+			<option value = 50>50</option>			
+		</select>
+	<!-- Select the sorting behaviour-->
+	<label for="businessSorting">Sort By:</label>
+		<select name="sorting" id="sorting" onchange="this.form.submit()">
+			<option selected ="selected"><%out.print(sortingString);%></option>
+			<option value = "Rating High To Low"> Rating: High To Low</option>
+			<option value = "Rating: Low To High">Rating: Low To High</option>
+			<option value = "Price: High To Low">Price: High To Low</option>
+			<option value = "Price: Low To High">Price: Low To High</option>	
+			
+		</select>
+		<!-- Make sure the same business ID is passed to the page on refresh for sorting.-->
+		<input type="hidden" name="businessId" value=<%out.print(businessId);%>><td>
+	</form>	
+		
+	
+	
 	<div class="businessInfo">
 	<table>
 	<tr>

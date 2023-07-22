@@ -4,6 +4,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 
 import com.algonquin.Capstone.beans.Review;
+import com.algonquin.Capstone.dao.EnumRatingSort;
 
 public interface ReviewServiceInterface {
 	
@@ -19,10 +20,11 @@ public interface ReviewServiceInterface {
 	 * Reads the request number of reviews for a business.
 	 * @param businessID the id of the business to get reviews for
 	 * @param numReviews the number of reviews to return for the business
+	 * @param ratingSort How the returned list of Reviews is to be sorted.
 	 * @return the number of reviews for the requested business
 	 * @throws SQLException 
 	 */
-	public ArrayList<Review> readNumReviews(int businessID, int numReviews) throws SQLException;
+	public ArrayList<Review> readNumReviews(int businessID, int numReviews, EnumRatingSort ratingSort) throws SQLException;
 	
 	/**
 	 * Reads all reviews for a business

@@ -3,6 +3,7 @@
  */
 package com.algonquin.Capstone.dao;
 
+import static org.junit.Assert.assertTrue;
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.sql.Connection;
@@ -61,7 +62,7 @@ class ReviewDaoTester {
 	}
 	
 	/**
-	 * Test that 5 reviews are being returned 
+	 * Test that the top 5 reviews are being returned 
 	 */
 	@Test
 	void testSelectTop5Reviews() {
@@ -126,11 +127,13 @@ class ReviewDaoTester {
 		
 		
 		try {
-			reviewList = reviewDao.readNumReviews(2 , 5);
+			reviewList = reviewDao.readNumReviews(2 , 5, EnumRatingSort.OVERALL_RATING_HIGH_LOW);
+			System.out.println("TOP 5 Reviews: ");
 			for (Review review : reviewList) {
 				review.printReviewToConsole();
 				
 			}
+			System.out.println();
 			
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
@@ -138,6 +141,83 @@ class ReviewDaoTester {
 		}
 		
 		assertEquals(5, reviewList.size());
+		// Check to make sure that the first rating is less than or equal to the one after it.
+		assertTrue(reviewList.get(0).getOverallRating() >= reviewList.get(1).getOverallRating());
+		
+	}
+	
+	/**
+	 * Test that bottom 5 business are being returned 
+	 */
+	@Test
+	void testSelectBottom5Reviews() {
+		
+		ArrayList<Review> reviewList = new ArrayList<>();		
+		try {
+			reviewList = reviewDao.readNumReviews(2, 5, EnumRatingSort.OVERALL_RATING_LOW_HIGH);
+			System.out.println("Bottom 5 Reviews: ");
+			for (Review review  : reviewList) {
+				review.printReviewToConsole();		
+			}
+			System.out.println();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		assertEquals(5, reviewList.size());
+		// Check to make sure that the first rating is less than or equal to the one after it.
+		assertTrue(reviewList.get(0).getOverallRating() <= reviewList.get(1).getOverallRating());
+		
+	}
+	
+	/**
+	 * Test that the most expensive 5 business are being returned 
+	 */
+	@Test
+	void testSelectExpensive5Reviews() {
+		
+		ArrayList<Review> reviewList = new ArrayList<>();		
+		try {
+			reviewList = reviewDao.readNumReviews(2, 5, EnumRatingSort.PRICE_RATING_HIGH_LOW);
+			System.out.println("Most Expensive 5 Reviews: ");
+			for (Review review  : reviewList) {
+				review.printReviewToConsole();	
+			}
+			System.out.println();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		assertEquals(5, reviewList.size());
+		// Check to make sure that the price first rating is greater than or equal to the one after it.
+		assertTrue(reviewList.get(0).getPriceRating() >= reviewList.get(1).getPriceRating());
+		
+	}
+	
+	/**
+	 * Test that the most expensive 5 business are being returned 
+	 */
+	@Test
+	void testSelectCheap5Reviews() {
+		
+		ArrayList<Review> reviewList = new ArrayList<>();		
+		try {
+			reviewList = reviewDao.readNumReviews(2, 5, EnumRatingSort.PRICE_RATING_LOW_HIGH);
+			System.out.println("Least Expensive 5 Reviews: ");
+			for (Review review  : reviewList) {
+				review.printReviewToConsole();		
+			}
+			System.out.println();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		assertEquals(5, reviewList.size());
+		// Check to make sure that the price first rating is less than or equal to the one after it.
+		assertTrue(reviewList.get(0).getPriceRating() <= reviewList.get(1).getPriceRating());
 		
 	}
 	

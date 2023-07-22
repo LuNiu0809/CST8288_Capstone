@@ -18,6 +18,7 @@ import com.algonquin.Capstone.service.ReviewServiceInterface;
  */
 public class ReviewDao implements ReviewServiceInterface{
 		
+	private RatingSortSQL ratingSortSQL;
 	
 	@Override
 	public synchronized int createReview(Review review) {
@@ -59,22 +60,27 @@ public class ReviewDao implements ReviewServiceInterface{
 	
 	
 	@Override
-	public synchronized ArrayList<Review> readNumReviews(int businessID, int numReviews) throws SQLException{
+	public synchronized ArrayList<Review> readNumReviews(int businessID, int numReviews, EnumRatingSort ratingSort) throws SQLException{
 		
 		ResultSet rs = null;
+		
+		// Get sorting sql string from business rating sort object
+		ratingSortSQL = new ReviewRatingSort();
+		String sql = ratingSortSQL.getRatingSortSQL(ratingSort);
 
 		try (
 				// Create DB Connection
 				Connection connection = DBConnection.getConnectionToDatabase();	
 
 				// Create select statement 
-				PreparedStatement readReview = connection.prepareStatement(
-						"SELECT id, user_ID, business_ID, Date, Content, PriceRating, OverallRating, FoodRating, ServiceRating, AtmosphereRating, UsefulCount"						
-								+ " FROM review "
-								+ " WHERE business_ID = ?" 
-								+ " ORDER BY Date DESC"
-								+ " LIMIT ?;"		
-						);
+				PreparedStatement readReview = connection.prepareStatement(sql);
+//				PreparedStatement readReview = connection.prepareStatement(
+//						"SELECT id, user_ID, business_ID, Date, Content, PriceRating, OverallRating, FoodRating, ServiceRating, AtmosphereRating, UsefulCount"						
+//								+ " FROM review "
+//								+ " WHERE business_ID = ?" 
+//								+ " ORDER BY Date DESC"
+//								+ " LIMIT ?;"		
+//						);
 				) {
 
 			readReview.setInt(1, businessID);

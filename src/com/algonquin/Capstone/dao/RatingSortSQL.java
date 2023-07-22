@@ -5,7 +5,7 @@ package com.algonquin.Capstone.dao;
  */
 
 
-public interface RatingSortSQL {
+public interface RatingSortSQL extends SqlSortBehaviour  {
 	
 	/**
 	 * Gets the String for an SQL prepared statement based on the requested sort type
