@@ -5,10 +5,15 @@ package com.algonquin.Capstone.dao;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
+import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
+import org.junit.jupiter.api.TestInstance.Lifecycle;
 
 import com.algonquin.Capstone.beans.Business;
 import com.algonquin.Capstone.beans.Review;
@@ -17,6 +22,7 @@ import com.algonquin.Capstone.beans.User;
 /**
  * Tests the ReviewDao Class 
  */
+@TestInstance(Lifecycle.PER_CLASS) 
 class ReviewDaoTester {
 	
 	Review testReview = new Review.Builder()			
@@ -204,7 +210,7 @@ class ReviewDaoTester {
 		Review testUpdateReview1 = new Review.Builder()	
 		.setAuthorID(1)
 		.setBusinessID(2)
-		.setContent("update useful Content ")
+		.setContent("Test update useful Content ")
 		.setAtmosphereRating(5)
 		.setFoodRating(5)
 		.setServiceRating(5)
@@ -232,5 +238,26 @@ class ReviewDaoTester {
 		
 	
 	}
+	
+	@AfterAll
+	void cleanUp() {		
+		System.out.println("Running cleanup");
+    	try (
+    			// Create DB Connection
+    			Connection connection = DBConnection.getConnectionToDatabase();	
+    			// Create delete statement 
+    			PreparedStatement deleteReview = connection.prepareStatement(
+    					"DELETE FROM review "
+    					+ "WHERE Content like ?");
+    			){
+    		deleteReview.setString(1, "Test%");
+    		int deleted = deleteReview.executeUpdate();
+    		System.out.println(deleted + " Records deleted");
+	
+		} catch (SQLException e) {		
+			e.printStackTrace();		
+		} 		
+	}	
+
 
 }

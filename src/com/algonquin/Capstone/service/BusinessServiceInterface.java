@@ -4,6 +4,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 
 import com.algonquin.Capstone.beans.Business;
+import com.algonquin.Capstone.dao.EnumRatingSort;
 
 public interface BusinessServiceInterface {
 	
@@ -15,12 +16,13 @@ public interface BusinessServiceInterface {
 	public int createBusiness(Business business);
 	
 	/**
-	 * Returns the requested number of business
-	 * @param numBusiness
-	 * @return
+	 * Returns the requested number of businesses, with a defined sorting order.
+	 * @param numBusiness The number of businesses
+	 * @param ratingSort How the returned list of businesses is to be sorted.
+	 * @return the list of businesses. 
 	 * @throws SQLException
 	 */
-	public ArrayList<Business> readNumBusiness(int numBusiness) throws SQLException;
+	public ArrayList<Business> readNumBusiness(int numBusiness, EnumRatingSort ratingSort) throws SQLException;
 	
 	
 	/**
@@ -38,5 +40,9 @@ public interface BusinessServiceInterface {
 	 * @return returns the number of rows updated, or 0 if the update failed. 
 	 */
 	public int updateRatings(Business business) throws SQLException;
+	
+	enum BusinessCol {
+		
+	}
 
 }

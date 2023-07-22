@@ -20,13 +20,30 @@
 <!-- Common Header to all pages -->
 <%@include file="header.jsp"%>
 
+<%
+int numRestaurants;
+if(request.getParameter("numRestaurants") != null){
+	numRestaurants = Integer.valueOf(request.getParameter("numRestaurants"));
+} else numRestaurants = 5; %>
+
 <h1>Check out these local Restaurants! (CST8288)</h1>
+
+<form action = "businessList.jsp" method = "post">
+<label for="numRestaurants">Select Number of Restaurants</label>
+	<select name="numRestaurants" id="numRestaurants" onchange="this.form.submit()">
+		<option value = 5>5</option>
+		<option value = 10>10</option>
+		<option value = 25>25</option>
+		<option value = 50>50</option>	
+		<option selected ="selected"><%out.print(numRestaurants);%></option>
+	</select>
+</form>	
   <div class="businessInfo" >
 		<table>
 			<%
 			ArrayList<Business> businessList = new ArrayList<>();
 				BusinessService businessService = new BusinessService();
-				businessList = businessService.readNumBusiness(5);
+				businessList = businessService.readNumBusiness(numRestaurants, EnumRatingSort.OVERALL_RATING_HIGH_LOW);
 				for (Business business : businessList) {				
 			%>
 			
