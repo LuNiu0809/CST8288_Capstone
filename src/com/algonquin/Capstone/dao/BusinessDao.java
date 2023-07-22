@@ -20,6 +20,8 @@ import com.algonquin.Capstone.service.BusinessServiceInterface;
  * Manages interactions to the Business Table in the database 
  */
 public class BusinessDao implements BusinessServiceInterface{
+	
+	private BusinessRatingSort ratingSortSQL;
 
 
 	@Override
@@ -56,28 +58,28 @@ public class BusinessDao implements BusinessServiceInterface{
 
 
 	@Override
-	public synchronized ArrayList<Business> readNumBusiness(int numBusiness) throws SQLException{
+	public synchronized ArrayList<Business> readNumBusiness(int numBusiness, EnumRatingSort ratingSort ) throws SQLException{
 
 		ResultSet rs = null;
-
+		
+		
+		// Get sorting sql string from business rating sort object
+		ratingSortSQL = new BusinessRatingSort();
+		String sql = ratingSortSQL.getRatingSortSQL(ratingSort);
+		
 		try (
 				// Create DB Connection
 				Connection connection = DBConnection.getConnectionToDatabase();	
+				
+				// Create select statement 				
+				PreparedStatement readBusiness = connection.prepareStatement(sql);
 
-				// Create select statement 
-				PreparedStatement readBusiness = connection.prepareStatement(
-						"SELECT id, Name, Address, Description, PhoneNumber, Email, OverallRating, PriceRating, FoodType, HoursOfOperation" 						
-								+ " FROM business "
-								+ " LIMIT ?;"		
-						);
 				) {
-
-			readBusiness.setInt(1, numBusiness);
+			
+			readBusiness.setInt(1, numBusiness);	
 
 			rs = readBusiness.executeQuery();
-
 			ArrayList<Business> businessList = new ArrayList<>();
-
 			while (rs.next()) {				
 				Business business =  getBusinessFromResultSet(rs);
 				businessList.add(business);
@@ -91,7 +93,6 @@ public class BusinessDao implements BusinessServiceInterface{
 
 			rs.close();
 		}
-
 		return null;
 	}
 	

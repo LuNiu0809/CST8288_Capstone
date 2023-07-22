@@ -10,6 +10,7 @@ import javax.servlet.RequestDispatcher;
 
 import com.algonquin.Capstone.beans.Business;
 import com.algonquin.Capstone.beans.Review;
+import com.algonquin.Capstone.dao.EnumRatingSort;
 import com.algonquin.Capstone.dao.ReviewDao;
 
 /**
@@ -30,8 +31,8 @@ public class ReviewService implements ReviewServiceInterface{
 	}
 	
 	@Override
-	public ArrayList<Review> readNumReviews(int businessID, int numReviews) throws SQLException{
-		return reviewDao.readNumReviews(businessID, numReviews);
+	public ArrayList<Review> readNumReviews(int businessID, int numReviews, EnumRatingSort ratingSort) throws SQLException{
+		return reviewDao.readNumReviews(businessID, numReviews, ratingSort);
 	}
 	
 	@Override

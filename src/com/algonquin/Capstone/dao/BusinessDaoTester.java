@@ -4,22 +4,30 @@
 package com.algonquin.Capstone.dao;
 
 
+import static org.junit.Assert.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
+import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
+import org.junit.jupiter.api.TestInstance.Lifecycle;
 
 import com.algonquin.Capstone.beans.Business;
 import com.algonquin.Capstone.beans.Review;
 
 
 
+
 /**
  * Tests the BusinessDao class
  */
+@TestInstance(Lifecycle.PER_CLASS) 
 class BusinessDaoTester {
 	
 	Business testBusiness = new Business();
@@ -46,10 +54,10 @@ class BusinessDaoTester {
 	}
 	
 	/**
-	 * Test that 5 business are being returned 
+	 * Test that the top 5 business are being returned 
 	 */
 	@Test
-	void testSelectTop5Reviews() {
+	void testSelectTop5Businesses() {
 		
 		ArrayList<Business> businessList = new ArrayList<>();
 		
@@ -112,11 +120,14 @@ class BusinessDaoTester {
 		
 		
 		try {
-			businessList = testBusinessDao.readNumBusiness( 5);
-//			for (Business business : businessList) {
-//				business.printBusinessToConsole();
-//				
-//			}
+			businessList = testBusinessDao.readNumBusiness(5, EnumRatingSort.OVERALL_RATING_HIGH_LOW);
+			System.out.println("TOP 5 Businesses: ");
+			
+			for (Business business : businessList) {
+				business.printBusinessToConsole();
+				
+			}
+			System.out.println();
 			
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
@@ -124,6 +135,83 @@ class BusinessDaoTester {
 		}
 		
 		assertEquals(5, businessList.size());
+		// Check to make sure that the first rating is greater than or equal to the one after it.
+		assertTrue(businessList.get(0).getOverallRating() >= businessList.get(1).getOverallRating());
+		
+	}
+	
+	/**
+	 * Test that bottom 5 business are being returned 
+	 */
+	@Test
+	void testSelectBottom5Businesses() {
+		
+		ArrayList<Business> businessList = new ArrayList<>();		
+		try {
+			businessList = testBusinessDao.readNumBusiness(5, EnumRatingSort.OVERALL_RATING_LOW_HIGH);
+			System.out.println("Bottom 5 Businesses: ");
+			for (Business business : businessList) {
+				business.printBusinessToConsole();		
+			}
+			System.out.println();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		assertEquals(5, businessList.size());
+		// Check to make sure that the first rating is less than or equal to the one after it.
+		assertTrue(businessList.get(0).getOverallRating() <= businessList.get(1).getOverallRating());
+		
+	}
+	
+	/**
+	 * Test that the most expensive 5 business are being returned 
+	 */
+	@Test
+	void testSelectExpensive5Businesses() {
+		
+		ArrayList<Business> businessList = new ArrayList<>();		
+		try {
+			businessList = testBusinessDao.readNumBusiness(5, EnumRatingSort.PRICE_RATING_HIGH_LOW);
+			System.out.println("Most Expensive 5 Businesses: ");
+			for (Business business : businessList) {
+				business.printBusinessToConsole();		
+			}
+			System.out.println();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		assertEquals(5, businessList.size());
+		// Check to make sure that the price first rating is greater than or equal to the one after it.
+		assertTrue(businessList.get(0).getPriceRating() >= businessList.get(1).getPriceRating());
+		
+	}
+	
+	/**
+	 * Test that the most expensive 5 business are being returned 
+	 */
+	@Test
+	void testSelectCheap5Businesses() {
+		
+		ArrayList<Business> businessList = new ArrayList<>();		
+		try {
+			businessList = testBusinessDao.readNumBusiness(5, EnumRatingSort.PRICE_RATING_LOW_HIGH);
+			System.out.println("Least Expensive 5 Businesses: ");
+			for (Business business : businessList) {
+				business.printBusinessToConsole();		
+			}
+			System.out.println();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		assertEquals(5, businessList.size());
+		// Check to make sure that the price first rating is less than or equal to the one after it.
+		assertTrue(businessList.get(0).getPriceRating() <= businessList.get(1).getPriceRating());
 		
 	}
 	
@@ -245,7 +333,25 @@ class BusinessDaoTester {
 	}
 	
 	
+	@AfterAll
+	void cleanUp() {		
+		System.out.println("Running cleanup");
+    	try (
+    			// Create DB Connection
+    			Connection connection = DBConnection.getConnectionToDatabase();	
+    			// Create delete statement 
+    			PreparedStatement deleteBusiness = connection.prepareStatement(
+    					"DELETE FROM business "
+    					+ "WHERE Description like ?");
+    			){
+    		deleteBusiness.setString(1, "Test%");
+    		int deleted = deleteBusiness.executeUpdate();
+    		System.out.println(deleted + " Records deleted");
 	
+		} catch (SQLException e) {		
+			e.printStackTrace();		
+		} 		
+	}
 	
 
 }

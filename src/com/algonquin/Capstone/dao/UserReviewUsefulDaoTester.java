@@ -4,8 +4,12 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import java.sql.SQLException;
 
+import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
+import org.junit.jupiter.api.TestInstance.Lifecycle;
 
+@TestInstance(Lifecycle.PER_CLASS) 
 class UserReviewUsefulDaoTester {
 	
 	UserReviewUsefulDao userReviewUseful  = new UserReviewUsefulDao();
@@ -44,7 +48,7 @@ class UserReviewUsefulDaoTester {
 		}		
 	}
 	
-	@Test
+	@AfterAll
 	void cleanup() {
 		userReviewUseful.deleteUserReviewHelpfulRecord(1, 1);
 		userReviewUseful.deleteUserReviewHelpfulRecord(2, 2);
