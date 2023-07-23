@@ -1,7 +1,7 @@
 /**
  * 
  */
-package com.algonquin.Capstone.dao;
+package com.algonquin.Capstone.dao.business;
 
 import java.sql.Connection;
 
@@ -11,6 +11,8 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 
 import com.algonquin.Capstone.beans.Business;
+import com.algonquin.Capstone.dao.DBConnection;
+import com.algonquin.Capstone.dao.EnumRatingSort;
 import com.algonquin.Capstone.service.BusinessServiceInterface;
 
 

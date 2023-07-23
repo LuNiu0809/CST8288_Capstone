@@ -1,7 +1,7 @@
 /**
  * 
  */
-package com.algonquin.Capstone.dao;
+package com.algonquin.Capstone.dao.review;
 
 import static org.junit.Assert.assertTrue;
 import static org.junit.jupiter.api.Assertions.*;
@@ -19,6 +19,7 @@ import org.junit.jupiter.api.TestInstance.Lifecycle;
 import com.algonquin.Capstone.beans.Business;
 import com.algonquin.Capstone.beans.Review;
 import com.algonquin.Capstone.beans.User;
+import com.algonquin.Capstone.dao.DBConnection;
 
 /**
  * Tests the ReviewDao Class 
@@ -127,8 +128,9 @@ class ReviewDaoTester {
 		
 		
 		try {
-			reviewList = reviewDao.readNumReviews(2 , 5, EnumRatingSort.OVERALL_RATING_HIGH_LOW);
-			System.out.println("TOP 5 Reviews: ");
+			reviewDao.setReadBehaviour(new ReviewReadRatingHighLow());
+			reviewList = reviewDao.readReviews(2 , 5);
+			System.out.println("Top 5 Reviews: ");
 			for (Review review : reviewList) {
 				review.printReviewToConsole();
 				
@@ -147,14 +149,15 @@ class ReviewDaoTester {
 	}
 	
 	/**
-	 * Test that bottom 5 business are being returned 
+	 * Test that bottom 5 reviews are being returned 
 	 */
 	@Test
 	void testSelectBottom5Reviews() {
 		
 		ArrayList<Review> reviewList = new ArrayList<>();		
 		try {
-			reviewList = reviewDao.readNumReviews(2, 5, EnumRatingSort.OVERALL_RATING_LOW_HIGH);
+			reviewDao.setReadBehaviour(new ReviewReadRatingLowHigh());
+			reviewList = reviewDao.readReviews(2, 5);
 			System.out.println("Bottom 5 Reviews: ");
 			for (Review review  : reviewList) {
 				review.printReviewToConsole();		
@@ -172,15 +175,16 @@ class ReviewDaoTester {
 	}
 	
 	/**
-	 * Test that the most expensive 5 business are being returned 
+	 * Test that the most newest reviews are being returned
 	 */
 	@Test
-	void testSelectExpensive5Reviews() {
+	void testSelect5NewestReviews() {
 		
 		ArrayList<Review> reviewList = new ArrayList<>();		
 		try {
-			reviewList = reviewDao.readNumReviews(2, 5, EnumRatingSort.PRICE_RATING_HIGH_LOW);
-			System.out.println("Most Expensive 5 Reviews: ");
+			reviewDao.setReadBehaviour(new ReviewReadNewest());
+			reviewList = reviewDao.readReviews(2, 5);
+			System.out.println("5 Newest Reviews: ");
 			for (Review review  : reviewList) {
 				review.printReviewToConsole();	
 			}
@@ -191,21 +195,22 @@ class ReviewDaoTester {
 		}
 		
 		assertEquals(5, reviewList.size());
-		// Check to make sure that the price first rating is greater than or equal to the one after it.
-		assertTrue(reviewList.get(0).getPriceRating() >= reviewList.get(1).getPriceRating());
+		// Check to make sure that the first rating is after the one after it.
+		assertTrue(reviewList.get(0).getCreationDate().after(reviewList.get(1).getCreationDate()));
 		
 	}
 	
 	/**
-	 * Test that the most expensive 5 business are being returned 
+	 * Test that the most useful 5 reviews are being returned. 
 	 */
 	@Test
-	void testSelectCheap5Reviews() {
+	void testSelect5MostUsefulReviews() {
 		
 		ArrayList<Review> reviewList = new ArrayList<>();		
 		try {
-			reviewList = reviewDao.readNumReviews(2, 5, EnumRatingSort.PRICE_RATING_LOW_HIGH);
-			System.out.println("Least Expensive 5 Reviews: ");
+			reviewDao.setReadBehaviour(new ReviewReadMostUseful());
+			reviewList = reviewDao.readReviews(2, 5);
+			System.out.println("5 Most Useful Reviews: ");
 			for (Review review  : reviewList) {
 				review.printReviewToConsole();		
 			}
@@ -216,8 +221,8 @@ class ReviewDaoTester {
 		}
 		
 		assertEquals(5, reviewList.size());
-		// Check to make sure that the price first rating is less than or equal to the one after it.
-		assertTrue(reviewList.get(0).getPriceRating() <= reviewList.get(1).getPriceRating());
+		// Check to make sure that the useful count is greater than or equal to the one after it.
+		assertTrue(reviewList.get(0).getUsefulCount() >= reviewList.get(1).getUsefulCount());
 		
 	}
 	

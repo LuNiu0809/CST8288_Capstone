@@ -8,8 +8,8 @@ import java.util.ArrayList;
 
 import com.algonquin.Capstone.beans.Business;
 import com.algonquin.Capstone.beans.Review;
-import com.algonquin.Capstone.dao.BusinessDao;
 import com.algonquin.Capstone.dao.EnumRatingSort;
+import com.algonquin.Capstone.dao.business.BusinessDao;
 
 /**
  * 

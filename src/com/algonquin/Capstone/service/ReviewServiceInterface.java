@@ -5,6 +5,7 @@ import java.util.ArrayList;
 
 import com.algonquin.Capstone.beans.Review;
 import com.algonquin.Capstone.dao.EnumRatingSort;
+import com.algonquin.Capstone.dao.review.ReviewReadBehaviour;
 
 public interface ReviewServiceInterface {
 	
@@ -17,14 +18,14 @@ public interface ReviewServiceInterface {
 	public int createReview(Review review);
 	
 	/**
-	 * Reads the request number of reviews for a business.
+	 * Reads reviews from the database, the read behaviour of the object defines how the results are sorted
+	 * The newest reviews are returned by default unless the read behaviour is changed.
 	 * @param businessID the id of the business to get reviews for
 	 * @param numReviews the number of reviews to return for the business
-	 * @param ratingSort How the returned list of Reviews is to be sorted.
 	 * @return the number of reviews for the requested business
 	 * @throws SQLException 
 	 */
-	public ArrayList<Review> readNumReviews(int businessID, int numReviews, EnumRatingSort ratingSort) throws SQLException;
+	public ArrayList<Review> readReviews(int businessID, int numReviews) throws SQLException;
 	
 	/**
 	 * Reads all reviews for a business
@@ -49,6 +50,14 @@ public interface ReviewServiceInterface {
 	 * @return returns the number of rows updated, or 0 if the update failed. 
 	 */
 	public int updateUsefulCount(int reviewID, int newUsefulCount);
+	
+	/**
+	 * Sets the read behaviour for how the list of reviews is returned by the readReviews method.
+	 * @param readBehaviour the requested reading behaviour
+	 */
+	public void setReadBehaviour(ReviewReadBehaviour readBehaviour);
+		
+	
 	
 
 
