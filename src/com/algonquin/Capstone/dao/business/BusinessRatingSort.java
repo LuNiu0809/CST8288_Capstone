@@ -1,5 +1,7 @@
-package com.algonquin.Capstone.dao;
+package com.algonquin.Capstone.dao.business;
 
+import com.algonquin.Capstone.dao.EnumRatingSort;
+import com.algonquin.Capstone.dao.RatingSortSQL;
 
 public class BusinessRatingSort implements RatingSortSQL{
 

@@ -1,7 +1,7 @@
 /**
  * 
  */
-package com.algonquin.Capstone.dao;
+package com.algonquin.Capstone.dao.review;
 
 import java.sql.Connection;
 import java.sql.Date;
@@ -10,7 +10,10 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
+
+
 import com.algonquin.Capstone.beans.Review;
+import com.algonquin.Capstone.dao.DBConnection;
 import com.algonquin.Capstone.service.ReviewServiceInterface;
 
 /**
@@ -18,7 +21,17 @@ import com.algonquin.Capstone.service.ReviewServiceInterface;
  */
 public class ReviewDao implements ReviewServiceInterface{
 		
-	private RatingSortSQL ratingSortSQL;
+//	private RatingSortSQL ratingSortSQL;
+	private ReviewReadBehaviour readBehaviour;
+	
+	public ReviewDao() {
+		readBehaviour = new ReviewReadNewest();
+	}
+	
+	@Override
+	public void setReadBehaviour(ReviewReadBehaviour readBehaviour) {
+		this.readBehaviour = readBehaviour;
+	}
 	
 	@Override
 	public synchronized int createReview(Review review) {
@@ -60,32 +73,15 @@ public class ReviewDao implements ReviewServiceInterface{
 	
 	
 	@Override
-	public synchronized ArrayList<Review> readNumReviews(int businessID, int numReviews, EnumRatingSort ratingSort) throws SQLException{
-		
+	public synchronized ArrayList<Review> readReviews(int businessID, int numReviews) throws SQLException{
+
 		ResultSet rs = null;
-		
-		// Get sorting sql string from business rating sort object
-		ratingSortSQL = new ReviewRatingSort();
-		String sql = ratingSortSQL.getRatingSortSQL(ratingSort);
-
 		try (
-				// Create DB Connection
-				Connection connection = DBConnection.getConnectionToDatabase();	
-
-				// Create select statement 
-				PreparedStatement readReview = connection.prepareStatement(sql);
-//				PreparedStatement readReview = connection.prepareStatement(
-//						"SELECT id, user_ID, business_ID, Date, Content, PriceRating, OverallRating, FoodRating, ServiceRating, AtmosphereRating, UsefulCount"						
-//								+ " FROM review "
-//								+ " WHERE business_ID = ?" 
-//								+ " ORDER BY Date DESC"
-//								+ " LIMIT ?;"		
-//						);
-				) {
-
-			readReview.setInt(1, businessID);
-			readReview.setInt(2, numReviews);
+				PreparedStatement readReview = readBehaviour.read(businessID, numReviews);
+				){
+			
 			rs = readReview.executeQuery();
+			
 
 			ArrayList<Review> reviewList = new ArrayList<>();
 			while (rs.next()) {
@@ -299,6 +295,8 @@ public class ReviewDao implements ReviewServiceInterface{
 			
 		
 	}
+
+
 	
 
 }

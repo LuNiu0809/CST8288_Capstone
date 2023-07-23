@@ -1,3 +1,7 @@
+<%@page import="com.algonquin.Capstone.dao.review.ReviewReadMostUseful"%>
+<%@page import="com.algonquin.Capstone.dao.review.ReviewReadNewest"%>
+<%@page import="com.algonquin.Capstone.dao.review.ReviewReadRatingLowHigh"%>
+<%@page import="com.algonquin.Capstone.dao.review.ReviewReadRatingHighLow"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@page import="java.lang.String"%>
@@ -21,6 +25,7 @@ BusinessService businessService = new BusinessService();
 int businessId = Integer.valueOf(request.getParameter("businessId"));
 
 UserReviewUsefulService userReviewUsefulService = new UserReviewUsefulService();
+ReviewService reviewService = new ReviewService();
 
 
 business = businessService.readBusiness(businessId);
@@ -28,6 +33,7 @@ business = businessService.readBusiness(businessId);
 int numReviews;
 String sortingString = "";
 EnumRatingSort ratingSort;
+ArrayList<Review> reviewList = new ArrayList<>();
 
 //Get number of restuarants to view, if not set use default value. 
 if(request.getParameter("numReviews") != null){
@@ -38,22 +44,19 @@ if(request.getParameter("numReviews") != null){
 if(request.getParameter("sorting") != null){
 	sortingString = request.getParameter("sorting");
 	switch (sortingString){
-	case "Rating High To Low" : ratingSort = EnumRatingSort.OVERALL_RATING_HIGH_LOW; break;
-	case "Rating: Low To High" : ratingSort = EnumRatingSort.OVERALL_RATING_LOW_HIGH; break;
-	case "Price: High To Low" : ratingSort = EnumRatingSort.PRICE_RATING_HIGH_LOW; break;
-	case "Price: Low To High" : ratingSort = EnumRatingSort.PRICE_RATING_LOW_HIGH; break;
-	default : ratingSort = EnumRatingSort.OVERALL_RATING_HIGH_LOW;
+	case "Rating High To Low" : reviewService.setReadBehaviour(new ReviewReadRatingHighLow()); break;
+	case "Rating: Low To High" : reviewService.setReadBehaviour(new ReviewReadRatingLowHigh()); break;
+	case "Newest" : reviewService.setReadBehaviour(new ReviewReadNewest()); break;
+	case "Most Useful" : reviewService.setReadBehaviour(new ReviewReadMostUseful()); break;
+	default : reviewService.setReadBehaviour(new ReviewReadNewest());
 	}
 } else {
-	ratingSort = EnumRatingSort.OVERALL_RATING_HIGH_LOW;
-	sortingString = "Rating High To Low";
+	reviewService.setReadBehaviour(new ReviewReadNewest());
+	sortingString = "Newest";
 }
 
 
-
-ArrayList<Review> reviewList = new ArrayList<>();
-ReviewService reviewService = new ReviewService();
-reviewList = reviewService.readNumReviews(businessId, numReviews, ratingSort);
+reviewList = reviewService.readReviews(businessId, numReviews);
 
 UserDao userDao = new UserDao();
 int currentUserID = 0;
@@ -94,8 +97,8 @@ if (session.getAttribute("username") != null){
 			<option selected ="selected"><%out.print(sortingString);%></option>
 			<option value = "Rating High To Low"> Rating: High To Low</option>
 			<option value = "Rating: Low To High">Rating: Low To High</option>
-			<option value = "Price: High To Low">Price: High To Low</option>
-			<option value = "Price: Low To High">Price: Low To High</option>	
+			<option value = "Newest">Newest</option>
+			<option value = "Most Useful">Most Useful</option>	
 			
 		</select>
 		<!-- Make sure the same business ID is passed to the page on refresh for sorting.-->

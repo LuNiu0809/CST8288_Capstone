@@ -11,7 +11,8 @@ import javax.servlet.RequestDispatcher;
 import com.algonquin.Capstone.beans.Business;
 import com.algonquin.Capstone.beans.Review;
 import com.algonquin.Capstone.dao.EnumRatingSort;
-import com.algonquin.Capstone.dao.ReviewDao;
+import com.algonquin.Capstone.dao.review.ReviewDao;
+import com.algonquin.Capstone.dao.review.ReviewReadBehaviour;
 
 /**
  * Acts as a service between the Review Dao Class and the Web Interface. 
@@ -31,8 +32,8 @@ public class ReviewService implements ReviewServiceInterface{
 	}
 	
 	@Override
-	public ArrayList<Review> readNumReviews(int businessID, int numReviews, EnumRatingSort ratingSort) throws SQLException{
-		return reviewDao.readNumReviews(businessID, numReviews, ratingSort);
+	public ArrayList<Review> readReviews(int businessID, int numReviews) throws SQLException{
+		return reviewDao.readReviews(businessID, numReviews);
 	}
 	
 	@Override
@@ -48,6 +49,12 @@ public class ReviewService implements ReviewServiceInterface{
 	@Override
 	public ArrayList<Review> readAllReviews(int businessID) throws SQLException{
 		return reviewDao.readAllReviews(businessID);
+	}
+	
+	@Override
+	public void setReadBehaviour(ReviewReadBehaviour readBehaviour) {
+		reviewDao.setReadBehaviour(readBehaviour);
+		
 	}
 	
 	
