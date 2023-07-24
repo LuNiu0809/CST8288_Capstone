@@ -54,7 +54,7 @@ CREATE TABLE IF NOT EXISTS `RestuarantReviews`.`business` (
   `HoursOfOperation` VARCHAR(45) NULL,
   `User_ID` INT NULL,
   PRIMARY KEY (`ID`),
-  INDEX `fk_business_user1_idx` (`User_ID` ASC) VISIBLE,
+  INDEX `fk_business_user1_idx` (`User_ID` ASC),
   CONSTRAINT `fk_business_user1`
     FOREIGN KEY (`User_ID`)
     REFERENCES `RestuarantReviews`.`user` (`ID`)
@@ -80,8 +80,8 @@ CREATE TABLE IF NOT EXISTS `RestuarantReviews`.`review` (
   `PhotosFileName` VARCHAR(45) NULL,
   `UsefulCount` INT NULL,
   PRIMARY KEY (`ID`),
-  INDEX `fk_review_user_idx` (`user_ID` ASC) VISIBLE,
-  INDEX `fk_review_business1_idx` (`business_ID` ASC) VISIBLE,
+  INDEX `fk_review_user_idx` (`user_ID` ASC),
+  INDEX `fk_review_business1_idx` (`business_ID` ASC),
   CONSTRAINT `fk_review_user`
     FOREIGN KEY (`user_ID`)
     REFERENCES `RestuarantReviews`.`user` (`ID`)
@@ -100,8 +100,8 @@ ENGINE = InnoDB;
 CREATE TABLE IF NOT EXISTS `RestuarantReviews`.`user_review_useful` (
   `user_ID` INT NOT NULL,
   `review_ID` INT NOT NULL,
-  INDEX `fk_user_review_useful_user_idx` (`user_ID` ASC) VISIBLE,
-  INDEX `fk_user_review_useful_review1_idx` (`review_ID` ASC) VISIBLE,
+  INDEX `fk_user_review_useful_user_idx` (`user_ID` ASC),
+  INDEX `fk_user_review_useful_review1_idx` (`review_ID` ASC),
   CONSTRAINT `fk_user_review_useful_user`
     FOREIGN KEY (`user_ID`)
     REFERENCES `restuarantreviews`.`user` (`ID`)

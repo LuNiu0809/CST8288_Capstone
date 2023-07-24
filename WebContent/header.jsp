@@ -6,24 +6,34 @@
 <body>
 <a href="home.jsp" class="button">Home</a>
 <a href="businessList.jsp" class="button">Explore Restaurants!</a>
-<a href="login.jsp" class="button">Login</a>
-<a href="signup.jsp" class="button">Register</a>
 
 
 <%
 //Create a new session
 session = request.getSession(true);
 String username = "";
+boolean authenticated = false;
 
 if (session.getAttribute("username") != null){
 	 username = session.getAttribute("username").toString();
+	 authenticated = true;
 } %>
+
+<%
+    if (authenticated) {
+        // If the user is authenticated, display the logout link
+    %>
+        <a href="logout" class="button">Logout</a>
+    <% } else { %>
+        <a href="login.jsp" class="button">Login</a>
+        <a href="signup.jsp" class="button">Register</a>
+    <% } %>
+
 <div class="currentUser">
 
 <%
 
 if (session.getAttribute("authenticated") != null){
-	boolean authenticated = (boolean) session.getAttribute("authenticated");
 	if (authenticated){
 		out.print("Current User: " + username);
 	} else {
