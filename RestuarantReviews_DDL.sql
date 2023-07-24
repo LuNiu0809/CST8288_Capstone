@@ -161,7 +161,22 @@ INSERT INTO business (ID, Name, Address, Description, PhoneNumber, Email, Overal
 VALUES(5, 'Biergarten', '456 Beer Garden Way, Ottawa ON', 'Biergarten Description', '613-123-2198', 'Biergarten@gmail.com', 4, 2, 'German', '11:00AM - 1:OOAM');
 
 INSERT INTO business (ID, Name, Address, Description, PhoneNumber, Email, OverallRating, PriceRating, FoodType, HoursOfOperation)
-VALUES(6, 'Dive Bar', '146 Back Alley Street, Ottawa ON', 'Dive Bar Description', '613-123-7654', 'Dive Bar@gmail.com', 2, 1, 'Bar', '1:00PM - 1:OOAM');
+VALUES(6, 'Dive Bar', '146 Back Alley Street, Ottawa ON', 'Dive Bar Description', '613-123-7654', 'DiveBar@gmail.com', 2, 1, 'Bar', '1:00PM - 1:OOAM');
+
+INSERT INTO business (ID, Name, Address, Description, PhoneNumber, Email, OverallRating, PriceRating, FoodType, HoursOfOperation)
+VALUES(7, 'Restaurant 7', 'Address 7', 'Description 7', '613-123-7777', 'Restaurant7@gmail.com', 3, 3, 'Generic', '1:00PM - 1:OOAM');
+
+INSERT INTO business (ID, Name, Address, Description, PhoneNumber, Email, OverallRating, PriceRating, FoodType, HoursOfOperation)
+VALUES(8, 'Restaurant 8', 'Address 8', 'Description 8', '613-123-8888', 'Restaurant8@gmail.com', 4, 4, 'Generic', '1:00PM - 1:OOAM');
+
+INSERT INTO business (ID, Name, Address, Description, PhoneNumber, Email, OverallRating, PriceRating, FoodType, HoursOfOperation)
+VALUES(9, 'Restaurant 9', 'Address 9', 'Description 9', '613-123-9999', 'Restaurant9@gmail.com', 5, 5, 'Generic', '1:00PM - 1:OOAM');
+
+INSERT INTO business (ID, Name, Address, Description, PhoneNumber, Email, OverallRating, PriceRating, FoodType, HoursOfOperation)
+VALUES(10, 'Restaurant 10', 'Address 10', 'Description 10', '613-123-1010', 'Restaurant10@gmail.com', 2, 2, 'Generic', '1:00PM - 1:OOAM');
+
+INSERT INTO business (ID, Name, Address, Description, PhoneNumber, Email, OverallRating, PriceRating, FoodType, HoursOfOperation)
+VALUES(11, 'Restaurant 11', 'Address 11', 'Description 11', '613-123-1111', 'Restaurant11@gmail.com', 1, 1, 'Generic', '1:00PM - 1:OOAM');
 
 
 
@@ -185,6 +200,33 @@ VALUES(5, 6, 5, NOW(), 'Great Beer!', 2, 4, 4, 4, 4, 3);
 
 INSERT INTO review (ID, user_ID, business_ID, Date, Content, PriceRating, OverallRating, FoodRating, ServiceRating, AtmosphereRating, UsefulCount)
 VALUES(6, 7, 6, NOW(), 'Standard dive bar', 1, 2, 2, 2, 2, 0);
+
+INSERT INTO review (ID, user_ID, business_ID, Date, Content, PriceRating, OverallRating, FoodRating, ServiceRating, AtmosphereRating, UsefulCount)
+VALUES(7, 3, 1, NOW(), 'Review 2', 3, 3, 3, 3, 3, 2);
+
+INSERT INTO review (ID, user_ID, business_ID, Date, Content, PriceRating, OverallRating, FoodRating, ServiceRating, AtmosphereRating, UsefulCount)
+VALUES(8, 4, 1, NOW(), 'Review 3', 2, 5, 4, 3, 2, 5);
+
+INSERT INTO review (ID, user_ID, business_ID, Date, Content, PriceRating, OverallRating, FoodRating, ServiceRating, AtmosphereRating, UsefulCount)
+VALUES(9, 5, 1, NOW(), 'Review 4', 1, 3, 3, 4, 5, 6);
+
+INSERT INTO review (ID, user_ID, business_ID, Date, Content, PriceRating, OverallRating, FoodRating, ServiceRating, AtmosphereRating, UsefulCount)
+VALUES(10, 6, 1, NOW(), 'Review 5', 2, 4, 4, 4, 4, 0);
+
+INSERT INTO review (ID, user_ID, business_ID, Date, Content, PriceRating, OverallRating, FoodRating, ServiceRating, AtmosphereRating, UsefulCount)
+VALUES(11, 7, 1, NOW(), 'Review 6', 3, 4, 4, 4, 4, 10);
+
+INSERT INTO review (ID, user_ID, business_ID, Date, Content, PriceRating, OverallRating, FoodRating, ServiceRating, AtmosphereRating, UsefulCount)
+VALUES(12, 2, 1, NOW(), 'Review 7', 1, 3, 3, 3, 3, 1);
+
+INSERT INTO review (ID, user_ID, business_ID, Date, Content, PriceRating, OverallRating, FoodRating, ServiceRating, AtmosphereRating, UsefulCount)
+VALUES(13, 3, 1, NOW(), 'Review 8', 2, 5, 5, 5, 5, 15);
+
+INSERT INTO review (ID, user_ID, business_ID, Date, Content, PriceRating, OverallRating, FoodRating, ServiceRating, AtmosphereRating, UsefulCount)
+VALUES(14, 4, 1, NOW(), 'Review 9', 2, 4, 4, 4, 4, 3);
+
+INSERT INTO review (ID, user_ID, business_ID, Date, Content, PriceRating, OverallRating, FoodRating, ServiceRating, AtmosphereRating, UsefulCount)
+VALUES(15, 5, 1, NOW(), 'Review 10', 2, 4, 4, 4, 4, 7);
 
 
 
