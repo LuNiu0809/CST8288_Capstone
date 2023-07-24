@@ -67,7 +67,6 @@ int currentUserID = 0;
 <%
 //Create a new session
 session = request.getSession(true);
-Boolean authenticated = false;
 if (session.getAttribute("authenticated") != null){
 	 authenticated = (boolean) session.getAttribute("authenticated");
 }

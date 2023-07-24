@@ -39,14 +39,16 @@ public class UserServelt extends HttpServlet {
 		} else if (requestURI.contains("/login")) {
 			// Handle user login
 			login(request, response);
-		} else if (requestURI.endsWith("/logout")) {
-			// Handle user logout
-			// logout(request, response);
 		} else {
 			// Invalid URL
 			response.sendError(HttpServletResponse.SC_NOT_FOUND);
 		}
 	}
+	
+	protected void doGet(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        logout(request, response);
+    }
 
 	private void login(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String username = request.getParameter("username");
@@ -67,6 +69,19 @@ public class UserServelt extends HttpServlet {
 		} else {
 			response.sendRedirect("login.jsp?error=1"); // Redirect back to login page with error flag
 		}
+	}
+	
+	private void logout(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		// Get the session (create a new one if not exists)
+        HttpSession session = request.getSession(false);
+
+        if (session != null) {
+            // Invalidate the session (remove all session attributes)
+            session.invalidate();
+        }
+
+        // Redirect the user to the login page after logout
+        response.sendRedirect("home.jsp");
 	}
 
 	private void register(HttpServletRequest request, HttpServletResponse response)
