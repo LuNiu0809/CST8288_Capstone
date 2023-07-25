@@ -28,6 +28,7 @@ UserReviewUsefulService userReviewUsefulService = new UserReviewUsefulService();
 ReviewService reviewService = new ReviewService();
 
 
+
 business = businessService.readBusiness(businessId);
 
 int numReviews;
@@ -44,19 +45,17 @@ if(request.getParameter("numReviews") != null){
 if(request.getParameter("sorting") != null){
 	sortingString = request.getParameter("sorting");
 	switch (sortingString){
-	case "Rating High To Low" : reviewService.setReadBehaviour(new ReviewReadRatingHighLow()); break;
-	case "Rating: Low To High" : reviewService.setReadBehaviour(new ReviewReadRatingLowHigh()); break;
-	case "Newest" : reviewService.setReadBehaviour(new ReviewReadNewest()); break;
-	case "Most Useful" : reviewService.setReadBehaviour(new ReviewReadMostUseful()); break;
-	default : reviewService.setReadBehaviour(new ReviewReadNewest());
+	case "Rating High To Low" : reviewList = reviewService.readReviews(businessId, numReviews, new ReviewReadRatingHighLow()); break;
+	case "Rating: Low To High" : reviewList = reviewService.readReviews(businessId, numReviews, new ReviewReadRatingLowHigh()); break;
+	case "Newest" : reviewList = reviewService.readReviews(businessId, numReviews, new ReviewReadNewest()); break;
+	case "Most Useful" : reviewList = reviewService.readReviews(businessId, numReviews, new ReviewReadMostUseful()); break;
+	default : reviewList = reviewService.readReviews(businessId, numReviews, new ReviewReadNewest());
 	}
 } else {
-	reviewService.setReadBehaviour(new ReviewReadNewest());
+	reviewList = reviewService.readReviews(businessId, numReviews, new ReviewReadNewest());
 	sortingString = "Newest";
 }
 
-
-reviewList = reviewService.readReviews(businessId, numReviews);
 
 UserDao userDao = new UserDao();
 int currentUserID = 0;
@@ -77,9 +76,7 @@ if (session.getAttribute("username") != null){
 }
 %>
 
-	<h1>
-		<%out.print(business.getName());%>
-	</h1>
+	<h1><%out.print(business.getName());%></h1>
 	<!-- Select the number of Reviews to view -->
 	<form action = "businessReviews.jsp" method = "post">
 	<label for="numReviews">Select Number of Restaurants</label>
@@ -91,21 +88,17 @@ if (session.getAttribute("username") != null){
 			<option value = 50>50</option>			
 		</select>
 	<!-- Select the sorting behaviour-->
-	<label for="businessSorting">Sort By:</label>
+	<label for="sorting">Sort By:</label>
 		<select name="sorting" id="sorting" onchange="this.form.submit()">
 			<option selected ="selected"><%out.print(sortingString);%></option>
 			<option value = "Rating High To Low"> Rating: High To Low</option>
 			<option value = "Rating: Low To High">Rating: Low To High</option>
 			<option value = "Newest">Newest</option>
-			<option value = "Most Useful">Most Useful</option>	
-			
+			<option value = "Most Useful">Most Useful</option>			
 		</select>
 		<!-- Make sure the same business ID is passed to the page on refresh for sorting.-->
 		<input type="hidden" name="businessId" value=<%out.print(businessId);%>><td>
 	</form>	
-		
-	
-	
 	<div class="businessInfo">
 	<table>
 	<tr>
@@ -115,8 +108,7 @@ if (session.getAttribute("username") != null){
 		<% // only show button to create new review to authenticated users. 
 		if (authenticated){ %>
 			<a href="newReviewForm.jsp?businessId=<%out.print(business.getId());%>" class="button">Review this Restaurant!</a>	
-		<%}%>
-		
+		<%}%>	
 	</td>
 	</tr>	
 		<tr>
@@ -126,35 +118,21 @@ if (session.getAttribute("username") != null){
 			<br> <%out.print(business.getAddress());%> <br> <%out.print(business.getPhoneNumber());%>
 			<br> <%out.print(business.getEmail());%>
 			</td>
-			<td>Hours of Operation: <br> <%out.print(business.getHoursOfOperation());%>
-			</td>
-			<td>
-				<%out.print(business.getDescription());%>	
-			<td>
+			<td>Hours of Operation: <br> <%out.print(business.getHoursOfOperation());%></td>
+			<td><%out.print(business.getDescription());%><td>
 			</tr>
-	
-		<tr>
+		<tr></tr>	
 		<tr></tr>
-		
-		<tr>
-		
-		
-		</tr>
 	</table>
 </div>
 	<div class="businessInfo">
 	<table>
-		
 		<tr>
 		<td></td>
-		<th>
-		Reviews
-		</th>
-		</tr>	
-		<% for (Review review : reviewList) { %>
+		<th>Reviews</th>
+		</tr><% for (Review review : reviewList) { %>
 		<tr>
 		<td>
-		
 		<%
 		User reviewAuthor = new User();
 		reviewAuthor = userDao.getUserById(review.getAuthorID());
@@ -180,23 +158,13 @@ if (session.getAttribute("username") != null){
 				buttonText = "No";
 			}%>	
 			<a href="UpdateUsefulCount?reviewId=<%out.print(review.getID());%>&businessId=<%out.print(business.getId());%>" class="button"><%out.print(buttonText);%></a>
-		<%}%>
-		
-		
-		
-		</td>
-			
+		<%}%>		
+		</td>			
 		</tr>
 		<tr></tr>
-
 		<tr></tr>
-
 		<% } %>
-
-
 	</table>
 </div>
-
-
 </body>
 </html>

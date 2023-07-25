@@ -12,7 +12,6 @@ import java.util.ArrayList;
 
 import com.algonquin.Capstone.beans.Business;
 import com.algonquin.Capstone.dao.DBConnection;
-import com.algonquin.Capstone.dao.EnumRatingSort;
 import com.algonquin.Capstone.service.BusinessServiceInterface;
 
 
@@ -23,8 +22,6 @@ import com.algonquin.Capstone.service.BusinessServiceInterface;
  */
 public class BusinessDao implements BusinessServiceInterface{
 	
-	private BusinessRatingSort ratingSortSQL;
-
 
 	@Override
 	public synchronized int createBusiness(Business business) {
@@ -60,26 +57,13 @@ public class BusinessDao implements BusinessServiceInterface{
 
 
 	@Override
-	public synchronized ArrayList<Business> readNumBusiness(int numBusiness, EnumRatingSort ratingSort ) throws SQLException{
-
-		ResultSet rs = null;
-		
-		
-		// Get sorting sql string from business rating sort object
-		ratingSortSQL = new BusinessRatingSort();
-		String sql = ratingSortSQL.getRatingSortSQL(ratingSort);
-		
-		try (
-				// Create DB Connection
-				Connection connection = DBConnection.getConnectionToDatabase();	
-				
+	public synchronized ArrayList<Business> readNumBusiness(int numBusiness, String keyword, BusinessReadBehaviour readBehaviour ) throws SQLException{
+		ResultSet rs = null;	
+		try (		
 				// Create select statement 				
-				PreparedStatement readBusiness = connection.prepareStatement(sql);
-
+				PreparedStatement readBusiness = readBehaviour.getPreparedStatement(numBusiness, keyword);
 				) {
 			
-			readBusiness.setInt(1, numBusiness);	
-
 			rs = readBusiness.executeQuery();
 			ArrayList<Business> businessList = new ArrayList<>();
 			while (rs.next()) {				
@@ -254,65 +238,65 @@ public class BusinessDao implements BusinessServiceInterface{
 		
 	}
 	
-	//searching by name or food
-
-		public synchronized ArrayList<Business> searchBusinessesByName(String keyword) throws SQLException {
-	        ResultSet rs = null;
-
-	        try (
-	            // Create DB Connection
-	            Connection connection = DBConnection.getConnectionToDatabase();
-	            // Create select statement with a LIKE clause for searching by name
-	            PreparedStatement searchBusinesses = connection.prepareStatement(
-	                "SELECT id, Name, Address, Description, PhoneNumber, Email, OverallRating, PriceRating, FoodType, HoursOfOperation"
-	                        + " FROM business "
-	                        + " WHERE Name LIKE ?"
-	            );
-	        ) {
-	        	searchBusinesses.setString(1, "%" + keyword + "%"); 
-	            rs = searchBusinesses.executeQuery();
-	            ArrayList<Business> businessList = new ArrayList<>();
-	            while (rs.next()) {
-	                Business business = getBusinessFromResultSet(rs);
-	                businessList.add(business);
-	            }
-	            return businessList;
-	        } catch (SQLException e) {
-	            e.printStackTrace();
-	        } finally {
-	            rs.close();
-	        }
-	        return null;
-	    }
-
-		public synchronized ArrayList<Business> searchBusinessesByFoodType(String foodType) throws SQLException {
-	        ResultSet rs = null;
-
-	        try (
-	            // Create DB Connection
-	            Connection connection = DBConnection.getConnectionToDatabase();
-	            // Create select statement with a LIKE clause for searching by food type
-	            PreparedStatement searchBusinesses = connection.prepareStatement(
-	                "SELECT id, Name, Address, Description, PhoneNumber, Email, OverallRating, PriceRating, FoodType, HoursOfOperation"
-	                        + " FROM business "
-	                        + " WHERE FoodType LIKE ?"
-	            );
-	        ) {
-	            searchBusinesses.setString(1, "%" + foodType + "%"); 
-	            rs = searchBusinesses.executeQuery();
-	            ArrayList<Business> businessList = new ArrayList<>();
-	            while (rs.next()) {
-	                Business business = getBusinessFromResultSet(rs);
-	                businessList.add(business);
-	            }
-	            return businessList;
-	        } catch (SQLException e) {
-	            e.printStackTrace();
-	        } finally {
-	            rs.close();
-	        }
-	        return null;
-	    }
+//	//searching by name or food
+//
+//		public synchronized ArrayList<Business> searchBusinessesByName(String keyword) throws SQLException {
+//	        ResultSet rs = null;
+//
+//	        try (
+//	            // Create DB Connection
+//	            Connection connection = DBConnection.getConnectionToDatabase();
+//	            // Create select statement with a LIKE clause for searching by name
+//	            PreparedStatement searchBusinesses = connection.prepareStatement(
+//	                "SELECT id, Name, Address, Description, PhoneNumber, Email, OverallRating, PriceRating, FoodType, HoursOfOperation"
+//	                        + " FROM business "
+//	                        + " WHERE Name LIKE ?"
+//	            );
+//	        ) {
+//	        	searchBusinesses.setString(1, "%" + keyword + "%"); 
+//	            rs = searchBusinesses.executeQuery();
+//	            ArrayList<Business> businessList = new ArrayList<>();
+//	            while (rs.next()) {
+//	                Business business = getBusinessFromResultSet(rs);
+//	                businessList.add(business);
+//	            }
+//	            return businessList;
+//	        } catch (SQLException e) {
+//	            e.printStackTrace();
+//	        } finally {
+//	            rs.close();
+//	        }
+//	        return null;
+//	    }
+//
+//		public synchronized ArrayList<Business> searchBusinessesByFoodType(String foodType) throws SQLException {
+//	        ResultSet rs = null;
+//
+//	        try (
+//	            // Create DB Connection
+//	            Connection connection = DBConnection.getConnectionToDatabase();
+//	            // Create select statement with a LIKE clause for searching by food type
+//	            PreparedStatement searchBusinesses = connection.prepareStatement(
+//	                "SELECT id, Name, Address, Description, PhoneNumber, Email, OverallRating, PriceRating, FoodType, HoursOfOperation"
+//	                        + " FROM business "
+//	                        + " WHERE FoodType LIKE ?"
+//	            );
+//	        ) {
+//	            searchBusinesses.setString(1, "%" + foodType + "%"); 
+//	            rs = searchBusinesses.executeQuery();
+//	            ArrayList<Business> businessList = new ArrayList<>();
+//	            while (rs.next()) {
+//	                Business business = getBusinessFromResultSet(rs);
+//	                businessList.add(business);
+//	            }
+//	            return businessList;
+//	        } catch (SQLException e) {
+//	            e.printStackTrace();
+//	        } finally {
+//	            rs.close();
+//	        }
+//	        return null;
+//	    }
 
 
 

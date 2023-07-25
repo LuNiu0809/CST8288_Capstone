@@ -22,10 +22,11 @@ public interface ReviewServiceInterface {
 	 * The newest reviews are returned by default unless the read behaviour is changed.
 	 * @param businessID the id of the business to get reviews for
 	 * @param numReviews the number of reviews to return for the business
+	 * @param readBehaviour the desired read behaviour for this action. 
 	 * @return the number of reviews for the requested business
 	 * @throws SQLException 
 	 */
-	public ArrayList<Review> readReviews(int businessID, int numReviews) throws SQLException;
+	public ArrayList<Review> readReviews(int businessID, int numReviews, ReviewReadBehaviour readBehaviour) throws SQLException;
 	
 	/**
 	 * Reads all reviews for a business
@@ -55,7 +56,7 @@ public interface ReviewServiceInterface {
 	 * Sets the read behaviour for how the list of reviews is returned by the readReviews method.
 	 * @param readBehaviour the requested reading behaviour
 	 */
-	public void setReadBehaviour(ReviewReadBehaviour readBehaviour);
+//	public void setReadBehaviour(ReviewReadBehaviour readBehaviour);
 		
 	
 	

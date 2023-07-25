@@ -1,3 +1,7 @@
+<%@page import="com.algonquin.Capstone.dao.business.BusinessReadRatingHighLow"%>
+<%@page import="com.algonquin.Capstone.dao.business.BusinessReadRatingLowHigh"%>
+<%@page import="com.algonquin.Capstone.dao.business.BusinessReadPriceHighLow"%>
+<%@page import="com.algonquin.Capstone.dao.business.BusinessReadPriceLowHigh"%>
 <%@page import="java.io.BufferedInputStream"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
@@ -25,6 +29,9 @@ int numRestaurants;
 String sortingString = "";
 EnumRatingSort ratingSort;
 
+ArrayList<Business> businessList = new ArrayList<>();
+BusinessService businessService = new BusinessService();
+
 // Get number of restuarants to view, if not set use default value. 
 if(request.getParameter("numRestaurants") != null){
 	numRestaurants = Integer.valueOf(request.getParameter("numRestaurants"));
@@ -34,14 +41,14 @@ if(request.getParameter("numRestaurants") != null){
 if(request.getParameter("sorting") != null){
 	sortingString = request.getParameter("sorting");
 	switch (sortingString){
-	case "Rating High To Low" : ratingSort = EnumRatingSort.OVERALL_RATING_HIGH_LOW; break;
-	case "Rating: Low To High" : ratingSort = EnumRatingSort.OVERALL_RATING_LOW_HIGH; break;
-	case "Price: High To Low" : ratingSort = EnumRatingSort.PRICE_RATING_HIGH_LOW; break;
-	case "Price: Low To High" : ratingSort = EnumRatingSort.PRICE_RATING_LOW_HIGH; break;
+	case "Rating High To Low" : businessList = businessService.readNumBusiness(numRestaurants, "", new BusinessReadRatingHighLow()); break;
+	case "Rating: Low To High" : businessList = businessService.readNumBusiness(numRestaurants, "", new BusinessReadRatingLowHigh()); break;
+	case "Price: High To Low" : businessList = businessService.readNumBusiness(numRestaurants, "", new BusinessReadPriceHighLow()); break;
+	case "Price: Low To High" : businessList = businessService.readNumBusiness(numRestaurants, "", new BusinessReadPriceLowHigh()); break;
 	default : ratingSort = EnumRatingSort.OVERALL_RATING_HIGH_LOW;
 	}
 } else {
-	ratingSort = EnumRatingSort.OVERALL_RATING_HIGH_LOW;
+	businessList = businessService.readNumBusiness(numRestaurants, "", new BusinessReadRatingHighLow());
 	sortingString = "Rating High To Low";
 }
 	
@@ -67,16 +74,14 @@ if(request.getParameter("sorting") != null){
 		<option value = "Rating High To Low"> Rating: High To Low</option>
 		<option value = "Rating: Low To High">Rating: Low To High</option>
 		<option value = "Price: High To Low">Price: High To Low</option>
-		<option value = "Price: Low To High">Price: Low To High</option>	
-		
+		<option value = "Price: Low To High">Price: Low To High</option>		
 	</select>
 </form>	
+
   <div class="businessInfo" >
 		<table>
 			<%
-			ArrayList<Business> businessList = new ArrayList<>();
-				BusinessService businessService = new BusinessService();
-				businessList = businessService.readNumBusiness(numRestaurants, ratingSort);
+			
 				for (Business business : businessList) {				
 			%>
 			

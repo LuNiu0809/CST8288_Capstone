@@ -10,6 +10,7 @@ import com.algonquin.Capstone.beans.Business;
 import com.algonquin.Capstone.beans.Review;
 import com.algonquin.Capstone.dao.EnumRatingSort;
 import com.algonquin.Capstone.dao.business.BusinessDao;
+import com.algonquin.Capstone.dao.business.BusinessReadBehaviour;
 
 /**
  * 
@@ -28,8 +29,8 @@ public class BusinessService implements BusinessServiceInterface{
 	}
 
 	@Override
-	public ArrayList<Business> readNumBusiness(int numBusiness, EnumRatingSort ratingSort) throws SQLException {
-		return businessDao.readNumBusiness(numBusiness, ratingSort);
+	public ArrayList<Business> readNumBusiness(int numBusiness, String keyword, BusinessReadBehaviour readBehaviour) throws SQLException {
+		return businessDao.readNumBusiness(numBusiness, keyword, readBehaviour);
 	}
 
 	@Override
