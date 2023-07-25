@@ -51,13 +51,6 @@ public interface ReviewServiceInterface {
 	 */
 	public int updateUsefulCount(int reviewID, int newUsefulCount);
 	
-	/**
-	 * Sets the read behaviour for how the list of reviews is returned by the readReviews method.
-	 * @param readBehaviour the requested reading behaviour
-	 */
-//	public void setReadBehaviour(ReviewReadBehaviour readBehaviour);
-		
-	
 	
 
 

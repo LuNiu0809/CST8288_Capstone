@@ -19,9 +19,9 @@ import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.TestInstance.Lifecycle;
 
 import com.algonquin.Capstone.beans.Business;
-import com.algonquin.Capstone.beans.Review;
+
 import com.algonquin.Capstone.dao.DBConnection;
-import com.algonquin.Capstone.dao.EnumRatingSort;
+
 
 
 

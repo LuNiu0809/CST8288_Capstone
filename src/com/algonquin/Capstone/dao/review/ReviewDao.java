@@ -21,17 +21,6 @@ import com.algonquin.Capstone.service.ReviewServiceInterface;
  */
 public class ReviewDao implements ReviewServiceInterface{
 		
-//	private RatingSortSQL ratingSortSQL;
-//	private ReviewReadBehaviour readBehaviour;
-//	
-//	public ReviewDao() {
-//		readBehaviour = new ReviewReadNewest();
-//	}
-//	
-//	@Override
-//	public void setReadBehaviour(ReviewReadBehaviour readBehaviour) {
-//		this.readBehaviour = readBehaviour;
-//	}
 	
 	@Override
 	public synchronized int createReview(Review review) {
