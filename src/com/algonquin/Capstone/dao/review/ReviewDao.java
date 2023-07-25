@@ -22,16 +22,16 @@ import com.algonquin.Capstone.service.ReviewServiceInterface;
 public class ReviewDao implements ReviewServiceInterface{
 		
 //	private RatingSortSQL ratingSortSQL;
-	private ReviewReadBehaviour readBehaviour;
-	
-	public ReviewDao() {
-		readBehaviour = new ReviewReadNewest();
-	}
-	
-	@Override
-	public void setReadBehaviour(ReviewReadBehaviour readBehaviour) {
-		this.readBehaviour = readBehaviour;
-	}
+//	private ReviewReadBehaviour readBehaviour;
+//	
+//	public ReviewDao() {
+//		readBehaviour = new ReviewReadNewest();
+//	}
+//	
+//	@Override
+//	public void setReadBehaviour(ReviewReadBehaviour readBehaviour) {
+//		this.readBehaviour = readBehaviour;
+//	}
 	
 	@Override
 	public synchronized int createReview(Review review) {
@@ -73,11 +73,11 @@ public class ReviewDao implements ReviewServiceInterface{
 	
 	
 	@Override
-	public synchronized ArrayList<Review> readReviews(int businessID, int numReviews) throws SQLException{
+	public synchronized ArrayList<Review> readReviews(int businessID, int numReviews, ReviewReadBehaviour readBehaviour) throws SQLException{
 
 		ResultSet rs = null;
 		try (
-				PreparedStatement readReview = readBehaviour.read(businessID, numReviews);
+				PreparedStatement readReview = readBehaviour.getPreparedStatement(businessID, numReviews);
 				){
 			
 			rs = readReview.executeQuery();

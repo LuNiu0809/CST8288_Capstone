@@ -6,10 +6,13 @@ import java.sql.SQLException;
 
 import com.algonquin.Capstone.dao.DBConnection;
 
+/**
+ * Searches for the most useful reviews for a business.
+ */
 public class ReviewReadMostUseful implements ReviewReadBehaviour{
 
 	@Override
-	public PreparedStatement read(int businessID, int numReviews) throws SQLException {
+	public PreparedStatement getPreparedStatement(int businessID, int numReviews) throws SQLException {
 				// Create DB Connection
 				Connection connection = DBConnection.getConnectionToDatabase();	
 				// Create select statement 

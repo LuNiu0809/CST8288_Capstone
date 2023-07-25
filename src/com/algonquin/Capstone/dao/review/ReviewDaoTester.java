@@ -12,6 +12,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 
 import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.TestInstance.Lifecycle;
@@ -66,6 +67,7 @@ class ReviewDaoTester {
 	 * Test that the top 5 reviews are being returned 
 	 */
 	@Test
+	@BeforeAll
 	void testSelectTop5Reviews() {
 		
 		ArrayList<Review> reviewList = new ArrayList<>();
@@ -128,8 +130,8 @@ class ReviewDaoTester {
 		
 		
 		try {
-			reviewDao.setReadBehaviour(new ReviewReadRatingHighLow());
-			reviewList = reviewDao.readReviews(2 , 5);
+//			reviewDao.setReadBehaviour(new ReviewReadRatingHighLow());
+			reviewList = reviewDao.readReviews(2 , 5, new ReviewReadRatingHighLow());
 			System.out.println("Top 5 Reviews: ");
 			for (Review review : reviewList) {
 				review.printReviewToConsole();
@@ -156,8 +158,8 @@ class ReviewDaoTester {
 		
 		ArrayList<Review> reviewList = new ArrayList<>();		
 		try {
-			reviewDao.setReadBehaviour(new ReviewReadRatingLowHigh());
-			reviewList = reviewDao.readReviews(2, 5);
+//			reviewDao.setReadBehaviour(new ReviewReadRatingLowHigh());
+			reviewList = reviewDao.readReviews(2, 5, new ReviewReadRatingLowHigh());
 			System.out.println("Bottom 5 Reviews: ");
 			for (Review review  : reviewList) {
 				review.printReviewToConsole();		
@@ -176,14 +178,27 @@ class ReviewDaoTester {
 	
 	/**
 	 * Test that the most newest reviews are being returned
+	 * @throws InterruptedException 
 	 */
 	@Test
-	void testSelect5NewestReviews() {
+	void testSelect5NewestReviews() throws InterruptedException {
+		
+//		Thread.sleep(60000); 
+		Review testReview= new Review.Builder()	
+				.setAuthorID(1)
+				.setBusinessID(2)
+				.setContent("Test Review Content 6")
+				.setAtmosphereRating(5)
+				.setFoodRating(5)
+				.setServiceRating(5)
+				.setPriceRating(5)
+				.createNewReview();
+				reviewDao.createReview(testReview);
 		
 		ArrayList<Review> reviewList = new ArrayList<>();		
 		try {
-			reviewDao.setReadBehaviour(new ReviewReadNewest());
-			reviewList = reviewDao.readReviews(2, 5);
+//			reviewDao.setReadBehaviour(new ReviewReadNewest());
+			reviewList = reviewDao.readReviews(2, 5, new ReviewReadNewest());
 			System.out.println("5 Newest Reviews: ");
 			for (Review review  : reviewList) {
 				review.printReviewToConsole();	
@@ -208,8 +223,8 @@ class ReviewDaoTester {
 		
 		ArrayList<Review> reviewList = new ArrayList<>();		
 		try {
-			reviewDao.setReadBehaviour(new ReviewReadMostUseful());
-			reviewList = reviewDao.readReviews(2, 5);
+//			reviewDao.setReadBehaviour(new ReviewReadMostUseful());
+			reviewList = reviewDao.readReviews(2, 5, new ReviewReadMostUseful());
 			System.out.println("5 Most Useful Reviews: ");
 			for (Review review  : reviewList) {
 				review.printReviewToConsole();		

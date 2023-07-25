@@ -5,6 +5,7 @@ import java.util.ArrayList;
 
 import com.algonquin.Capstone.beans.Business;
 import com.algonquin.Capstone.dao.EnumRatingSort;
+import com.algonquin.Capstone.dao.business.BusinessReadBehaviour;
 
 public interface BusinessServiceInterface {
 	
@@ -16,13 +17,14 @@ public interface BusinessServiceInterface {
 	public int createBusiness(Business business);
 	
 	/**
-	 * Returns the requested number of businesses, with a defined sorting order.
+	 * Search for number of businesses by their name or type of food or description, with a defined read behaviour. 
 	 * @param numBusiness The number of businesses
-	 * @param ratingSort How the returned list of businesses is to be sorted.
-	 * @return the list of businesses. 
-	 * @throws SQLException
+	 * @param keyword The keyword to search for (business name or type of food).
+	 * @param readBehaviour the desired read behaviour for this action. 
+	 * @return A list of businesses that match the search criteria.
+	 * @throws SQLException If there's an error while accessing the database.
 	 */
-	public ArrayList<Business> readNumBusiness(int numBusiness, EnumRatingSort ratingSort) throws SQLException;
+	public ArrayList<Business> readNumBusiness(int numBusiness, String keyword, BusinessReadBehaviour readBehaviour) throws SQLException;
 	
 	
 	/**
@@ -41,8 +43,4 @@ public interface BusinessServiceInterface {
 	 */
 	public int updateRatings(Business business) throws SQLException;
 	
-	enum BusinessCol {
-		
-	}
-
 }

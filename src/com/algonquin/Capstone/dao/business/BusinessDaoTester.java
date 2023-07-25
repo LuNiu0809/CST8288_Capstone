@@ -122,7 +122,7 @@ class BusinessDaoTester {
 		
 		
 		try {
-			businessList = testBusinessDao.readNumBusiness(5, EnumRatingSort.OVERALL_RATING_HIGH_LOW);
+			businessList = testBusinessDao.readNumBusiness(5, "", new BusinessReadRatingHighLow());
 			System.out.println("TOP 5 Businesses: ");
 			
 			for (Business business : businessList) {
@@ -150,7 +150,7 @@ class BusinessDaoTester {
 		
 		ArrayList<Business> businessList = new ArrayList<>();		
 		try {
-			businessList = testBusinessDao.readNumBusiness(5, EnumRatingSort.OVERALL_RATING_LOW_HIGH);
+			businessList = testBusinessDao.readNumBusiness(5, "", new BusinessReadRatingLowHigh());
 			System.out.println("Bottom 5 Businesses: ");
 			for (Business business : businessList) {
 				business.printBusinessToConsole();		
@@ -175,7 +175,7 @@ class BusinessDaoTester {
 		
 		ArrayList<Business> businessList = new ArrayList<>();		
 		try {
-			businessList = testBusinessDao.readNumBusiness(5, EnumRatingSort.PRICE_RATING_HIGH_LOW);
+			businessList = testBusinessDao.readNumBusiness(5,  "", new BusinessReadPriceHighLow());
 			System.out.println("Most Expensive 5 Businesses: ");
 			for (Business business : businessList) {
 				business.printBusinessToConsole();		
@@ -200,7 +200,7 @@ class BusinessDaoTester {
 		
 		ArrayList<Business> businessList = new ArrayList<>();		
 		try {
-			businessList = testBusinessDao.readNumBusiness(5, EnumRatingSort.PRICE_RATING_LOW_HIGH);
+			businessList = testBusinessDao.readNumBusiness(5, "", new BusinessReadPriceLowHigh());
 			System.out.println("Least Expensive 5 Businesses: ");
 			for (Business business : businessList) {
 				business.printBusinessToConsole();		

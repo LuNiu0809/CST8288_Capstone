@@ -32,9 +32,11 @@ public class ReviewService implements ReviewServiceInterface{
 	}
 	
 	@Override
-	public ArrayList<Review> readReviews(int businessID, int numReviews) throws SQLException{
-		return reviewDao.readReviews(businessID, numReviews);
+	public ArrayList<Review> readReviews(int businessID, int numReviews, ReviewReadBehaviour readBehaviour) throws SQLException{
+		return reviewDao.readReviews(businessID, numReviews, readBehaviour);
 	}
+	
+
 	
 	@Override
 	public Review readReview(int reviewID) throws SQLException {
@@ -51,12 +53,12 @@ public class ReviewService implements ReviewServiceInterface{
 		return reviewDao.readAllReviews(businessID);
 	}
 	
-	@Override
-	public void setReadBehaviour(ReviewReadBehaviour readBehaviour) {
-		reviewDao.setReadBehaviour(readBehaviour);
-		
-	}
-	
+//	@Override
+//	public void setReadBehaviour(ReviewReadBehaviour readBehaviour) {
+//		reviewDao.setReadBehaviour(readBehaviour);
+//		
+//	}
+//	
 	
 		
 		
