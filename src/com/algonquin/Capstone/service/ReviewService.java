@@ -53,13 +53,7 @@ public class ReviewService implements ReviewServiceInterface{
 		return reviewDao.readAllReviews(businessID);
 	}
 	
-//	@Override
-//	public void setReadBehaviour(ReviewReadBehaviour readBehaviour) {
-//		reviewDao.setReadBehaviour(readBehaviour);
-//		
-//	}
-//	
-	
+
 		
 		
 
