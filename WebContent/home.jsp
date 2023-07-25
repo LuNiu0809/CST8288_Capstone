@@ -18,7 +18,7 @@
     <p>Need to login? Just click bellow!</p>
     <p>
      <!--   <a href="reviewlist.jsp" class="button">Explore Reviews</a>-->
-      <a href="businessList.jsp" class="button">Explore Restaurants!</a>
+      <a href="GetBusinessList" class="button">Explore Restaurants!</a>
       <a href="login.jsp" class="button">Login?</a>
     </p>
   </div>

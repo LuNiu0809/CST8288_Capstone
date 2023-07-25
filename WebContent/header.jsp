@@ -5,7 +5,7 @@
 
 <body>
 <a href="home.jsp" class="button">Home</a>
-<a href="businessList.jsp" class="button">Explore Restaurants!</a>
+<a href="GetBusinessList" class="button">Explore Restaurants!</a>
 
 
 <%
