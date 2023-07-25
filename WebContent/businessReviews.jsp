@@ -33,7 +33,6 @@ business = businessService.readBusiness(businessId);
 
 int numReviews;
 String sortingString = "";
-EnumRatingSort ratingSort;
 ArrayList<Review> reviewList = new ArrayList<>();
 
 //Get number of restuarants to view, if not set use default value. 
