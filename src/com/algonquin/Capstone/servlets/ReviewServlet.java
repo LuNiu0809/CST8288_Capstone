@@ -26,7 +26,7 @@ import com.algonquin.Capstone.service.UserReviewUsefulService;
 /**
  * 
  */
-@WebServlet(name = "ReviewServlet", urlPatterns = {"/CreateNewReview", "/UpdateUsefulCount"} )
+@WebServlet(name = "ReviewServlet", urlPatterns = {"/CreateNewReview", "/UpdateUsefulCount", "/GetReviewList" } )
 public class ReviewServlet extends HttpServlet{
 	
 	private static final long serialVersionUID = 1L;
@@ -227,5 +227,7 @@ public class ReviewServlet extends HttpServlet{
 		return review;
 		
 	}
+	
+
 
 }
