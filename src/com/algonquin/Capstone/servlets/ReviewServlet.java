@@ -71,9 +71,8 @@ public class ReviewServlet extends HttpServlet{
 			// Update Review Useful Count		
 			try {
 				updateUsefulCount(req, resp);
-			} catch (ServletException | IOException | SQLException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+			} catch (Exception e) {
+				forwardToErrorPage(req, resp, "Error Updating useful count");
 			}
 		} else if (requestURI.contains("/GetBusinessReviews" )){ 
 			
@@ -97,26 +96,26 @@ public class ReviewServlet extends HttpServlet{
 	private void createNewReview(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 	
 		ReviewService reviewService = new ReviewService();
-
-		// Set the review data from the Request. 
-		Review review = setReviewData(req);
-		
 		try {
+			
+			// Set the review data from the Request. 
+			Review review = setReviewData(req);
+
 			// Create the new review in Database. 
 			int createStatus = reviewService.createReview(review);
-			
+
 			// If the review was successfully added to the database, update the business's overall ratings. 
 			if (createStatus > 0){
-				
+
 				BusinessService businessService = new BusinessService();
 				Business business = businessService.readBusiness(review.getBusinessID());
 
 				int businessUpdateStatus;
-				
+
 				businessUpdateStatus = businessService.updateRatings(business);
 				// If the business was successfully updated in the database return to the business reivews page.
 				if (businessUpdateStatus > 0){
-					
+
 					// Change sorting to show the newest review first.
 					session.setAttribute(REVIEW_SORTING_STRING, "Newest");
 					getBusinessReviews(req, resp);
@@ -147,14 +146,15 @@ public class ReviewServlet extends HttpServlet{
 	private void updateUsefulCount(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException, SQLException {
 		
 		ReviewService reviewService = new ReviewService();
-		
+
 		UserReviewUsefulService userReviewUsefulService = new UserReviewUsefulService();
-		
-		// Get current user ID
-		int userId = getCurrentUserID(req);
-		int reviewId = Integer.valueOf(req.getParameter("reviewId"));
-		
 		try {
+			// Get current user ID
+			int userId = getCurrentUserID(req);
+
+			// Get review ID
+			int reviewId = getReviewID(req);
+
 			Review review = reviewService.readReview(reviewId);
 			// Check if the user has already found review helpful.
 			if (userReviewUsefulService.checkUserReviewHelpfulRecord(userId, reviewId)) {
@@ -163,7 +163,7 @@ public class ReviewServlet extends HttpServlet{
 				if (userReviewUsefulService.deleteUserReviewHelpfulRecord(userId, reviewId) == 0) {
 					forwardToErrorPage(req, resp, "Error Updating Review Useful Count");
 				}
-				
+
 			} else {
 				review.increaseUsefulCount();
 				// Add Record and Check to make sure the User Review Useful Table was updated. 
@@ -171,21 +171,69 @@ public class ReviewServlet extends HttpServlet{
 					forwardToErrorPage(req, resp, "Error Updating Review Useful Count");
 				}
 			}
-				
+
 			// Check to make sure the review table was updated. 
 			if (reviewService.updateUsefulCount(reviewId, review.getUsefulCount()) == 0) {
 				forwardToErrorPage(req, resp, "Error Updating Review Useful Count");
 			}
-				
+
 			getBusinessReviews(req, resp);			
-			
-		} catch (SQLException e) {
-			
+
+		} catch (SQLException e) {	
 			e.printStackTrace();
 			forwardToErrorPage(req, resp, "Error Updating useful count");
 		}
-		
+
 	}
+	
+	/**
+	 * Returns a list of reviews for the business requested by the http servlet request
+	 * @param request
+	 * @param response
+	 * @throws ServletException
+	 * @throws IOException
+	 */
+	private void getBusinessReviews(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
+		
+		//Create a new session
+		session = request.getSession(true);
+
+		ReviewService reviewService = new ReviewService();
+		ArrayList<Review> reviewList = new ArrayList<>();
+
+		try {
+			// Get business ID
+			int businessId = getBusinessID(request);
+
+			//Get number of restuarants to view, if not set use default value. 
+			int numReviews = getNumReviews(request, session);		
+			session.setAttribute(NUMBER_REVIEWS_STRING, numReviews);
+
+			//Get sorting, if not set use default value
+			String sortingString = getSortingString(request, session);
+			session.setAttribute(REVIEW_SORTING_STRING, sortingString);
+
+
+			switch (sortingString){
+			case "Rating High To Low" : reviewList = reviewService.readReviews(businessId, numReviews, new ReviewReadRatingHighLow()); break;
+			case "Rating: Low To High" : reviewList = reviewService.readReviews(businessId, numReviews, new ReviewReadRatingLowHigh()); break;
+			case "Newest" : reviewList = reviewService.readReviews(businessId, numReviews, new ReviewReadNewest()); break;
+			case "Most Useful" : reviewList = reviewService.readReviews(businessId, numReviews, new ReviewReadMostUseful()); break;
+			default : reviewList = reviewService.readReviews(businessId, numReviews, new ReviewReadNewest());
+			}
+
+		} catch (Exception e) {
+			forwardToErrorPage(request, response, "Error reading reviews");
+			e.printStackTrace();
+		}
+
+		session.setAttribute(REVIEW_LIST_STRING, reviewList);
+
+		RequestDispatcher rd = request.getRequestDispatcher("businessReviews.jsp");
+		rd.forward(request, response);
+
+	}
+	
 	
 	/**
 	 * Forwards the user to the error page if something unexpected happened
@@ -206,11 +254,11 @@ public class ReviewServlet extends HttpServlet{
 	}
 	
 	/**
-	 * Gets the current User ID, returns 0 if current username is null. 
+	 * Gets the current User ID, throw IllegalArgumentException if it is null.
 	 * @param req
-	 * @return Current user ID or 0 if current username is null.
+	 * @return Current user ID 
 	 */
-	private int getCurrentUserID(HttpServletRequest req) {
+	private int getCurrentUserID(HttpServletRequest req) throws IllegalArgumentException{
 
 		//Create a new session
 		session = req.getSession(true);
@@ -224,91 +272,80 @@ public class ReviewServlet extends HttpServlet{
 			UserDao userDao = new UserDao();
 			user = userDao.getUserByUsername(currentUsername);
 			return user.getId();
-		} else {
-			return 0;
+		} else {	
+			throw new IllegalArgumentException("Error reading User ID");
 		}
 
 	}
+	/**
+	 * Gets the revuewID from the http request, rthrow IllegalArgumentException if it is null. 
+	 * @param req
+	 * @return current review ID, 
+	 */
+	private int getReviewID(HttpServletRequest req) throws IllegalArgumentException{
+
+		int reviewId = 0;	
+		if (req.getParameter("reviewId") != null){
+			// Get reviewID from current session. 
+			reviewId = Integer.valueOf(req.getParameter("reviewId"));
+			return reviewId;
+		} else {		
+			throw new IllegalArgumentException("Error reading Review ID");
+		}
+	}
+	
+	/**
+	 * Gets the Business ID from the http request, throw IllegalArgumentException if it is null.
+	 * @param req
+	 * @return businessID
+	 * @throws IllegalArgumentException
+	 */
+	private int getBusinessID(HttpServletRequest req) throws IllegalArgumentException{
+
+		int businessId = 0;	
+		if (req.getParameter("businessId") != null){
+			// Get businessID from current session. 
+			businessId = Integer.valueOf(req.getParameter("businessId"));
+			return businessId;
+		} else {		
+			throw new IllegalArgumentException("Error reading business ID");
+		}
+	}
+	
 	
 	/**
 	 * Returns a review object with the review data from the http servlet request
 	 * @param req the http servlet request
 	 * @return the review object create from the http servlet request
 	 */
-	private Review setReviewData(HttpServletRequest req) {		
-		
-		// get review information from post.
-		int foodRating = Integer.valueOf(req.getParameter("foodRating"));
-		int serviceRating = Integer.valueOf(req.getParameter("serviceRating"));
-		int atmosphereRating = Integer.valueOf(req.getParameter("atmosphereRating"));
-		int priceRating = Integer.valueOf(req.getParameter("priceRating"));
-		String content = req.getParameter("content");
-		
-		// Get current user ID
-		int userId = getCurrentUserID(req);
-		
-		// Get business ID
-		int businessId = Integer.valueOf(req.getParameter("businessId"));
-		
-		Review review = new Review.Builder()	
-		.setAuthorID(userId)
-		.setBusinessID(businessId)
-		.setFoodRating(foodRating)
-		.setServiceRating(serviceRating)
-		.setAtmosphereRating(atmosphereRating)
-		.setPriceRating(priceRating)
-		.setContent(content)
-		.createNewReview();
-		return review;
-		
+	private Review setReviewData(HttpServletRequest req) throws Exception{
+					
+			// get review information from post.
+			int foodRating = Integer.valueOf(req.getParameter("foodRating"));
+			int serviceRating = Integer.valueOf(req.getParameter("serviceRating"));
+			int atmosphereRating = Integer.valueOf(req.getParameter("atmosphereRating"));
+			int priceRating = Integer.valueOf(req.getParameter("priceRating"));
+			String content = req.getParameter("content");
+			
+			// Get current user ID
+			int userId = getCurrentUserID(req);
+			
+			// Get business ID
+			int businessId = getBusinessID(req);
+
+			
+			Review review = new Review.Builder()	
+			.setAuthorID(userId)
+			.setBusinessID(businessId)
+			.setFoodRating(foodRating)
+			.setServiceRating(serviceRating)
+			.setAtmosphereRating(atmosphereRating)
+			.setPriceRating(priceRating)
+			.setContent(content)
+			.createNewReview();
+			return review;			
 	}
 	
-	/**
-	 * Returns a list of reviews for the business requested by the http servlet request
-	 * @param request
-	 * @param response
-	 * @throws ServletException
-	 * @throws IOException
-	 */
-	private void getBusinessReviews(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
-		
-		//Create a new session
-		session = request.getSession(true);
-
-		int businessId = Integer.valueOf(request.getParameter("businessId"));
-		ReviewService reviewService = new ReviewService();
-
-
-		ArrayList<Review> reviewList = new ArrayList<>();
-
-		//Get number of restuarants to view, if not set use default value. 
-		int numReviews = getNumReviews(request, session);		
-		session.setAttribute(NUMBER_REVIEWS_STRING, numReviews);
-
-		//Get sorting, if not set use default value
-		String sortingString = getSortingString(request, session);
-		session.setAttribute(REVIEW_SORTING_STRING, sortingString);
-
-		try {
-			switch (sortingString){
-			case "Rating High To Low" : reviewList = reviewService.readReviews(businessId, numReviews, new ReviewReadRatingHighLow()); break;
-			case "Rating: Low To High" : reviewList = reviewService.readReviews(businessId, numReviews, new ReviewReadRatingLowHigh()); break;
-			case "Newest" : reviewList = reviewService.readReviews(businessId, numReviews, new ReviewReadNewest()); break;
-			case "Most Useful" : reviewList = reviewService.readReviews(businessId, numReviews, new ReviewReadMostUseful()); break;
-			default : reviewList = reviewService.readReviews(businessId, numReviews, new ReviewReadNewest());
-			}
-
-		} catch (Exception e) {
-			forwardToErrorPage(request, response, "Error reading reviews");
-			e.printStackTrace();
-		}
-
-		session.setAttribute(REVIEW_LIST_STRING, reviewList);
-
-		RequestDispatcher rd = request.getRequestDispatcher("businessReviews.jsp");
-		rd.forward(request, response);
-
-	}
 	
 	/**
 	 * Gets the sorting string
@@ -352,9 +389,4 @@ public class ReviewServlet extends HttpServlet{
 		
 	}
 	
-
-
-	
-
-
 }

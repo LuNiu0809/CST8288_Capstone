@@ -6,6 +6,9 @@
 <%@page import="com.algonquin.Capstone.dao.*"%>
 <%@page import="com.algonquin.Capstone.service.*"%>
 <%@page import="java.util.ArrayList"%>
+<%@page errorPage= "Error.jsp"%>
+
+
 <!DOCTYPE html>
 <html>
 <head>

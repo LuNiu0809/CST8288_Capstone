@@ -3,6 +3,7 @@
     <%@page import="com.algonquin.Capstone.beans.*"%>
 	<%@page import="com.algonquin.Capstone.dao.*"%>
 	<%@page import="com.algonquin.Capstone.service.*"%>
+<%@page errorPage= "Error.jsp"%>
 <!DOCTYPE html>
 <html>
 <head>
