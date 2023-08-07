@@ -19,6 +19,10 @@ import com.algonquin.Capstone.beans.Business;
 import com.algonquin.Capstone.beans.Review;
 import com.algonquin.Capstone.beans.User;
 import com.algonquin.Capstone.dao.UserDao;
+import com.algonquin.Capstone.dao.review.ReviewReadMostUseful;
+import com.algonquin.Capstone.dao.review.ReviewReadNewest;
+import com.algonquin.Capstone.dao.review.ReviewReadRatingHighLow;
+import com.algonquin.Capstone.dao.review.ReviewReadRatingLowHigh;
 import com.algonquin.Capstone.service.BusinessService;
 import com.algonquin.Capstone.service.ReviewService;
 import com.algonquin.Capstone.service.UserReviewUsefulService;
@@ -26,10 +30,15 @@ import com.algonquin.Capstone.service.UserReviewUsefulService;
 /**
  * 
  */
-@WebServlet(name = "ReviewServlet", urlPatterns = {"/CreateNewReview", "/UpdateUsefulCount"} )
+@WebServlet(name = "ReviewServlet", urlPatterns = {"/CreateNewReview", "/UpdateUsefulCount", "/GetBusinessReviews"} )
 public class ReviewServlet extends HttpServlet{
 	
 	private static final long serialVersionUID = 1L;
+	public static final String NUMBER_REVIEWS_STRING = "numReviews";
+	public static final String REVIEW_SORTING_STRING = "reviewSorting";
+	public static final String REVIEW_LIST_STRING = "reviewList";
+	
+	
 	private HttpSession session;
 	
 	
@@ -41,6 +50,11 @@ public class ReviewServlet extends HttpServlet{
 		if (requestURI.endsWith("/CreateNewReview")) {
 			// Create a new review. 
 			createNewReview(req, resp);
+			
+		} else if (requestURI.contains("/GetBusinessReviews" )){ 
+			
+			getBusinessReviews(req, resp);	
+			
 		} else {
 			// Invalid URL
 			resp.sendError(HttpServletResponse.SC_NOT_FOUND);
@@ -61,7 +75,12 @@ public class ReviewServlet extends HttpServlet{
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-		} else {
+		} else if (requestURI.contains("/GetBusinessReviews" )){ 
+			
+			getBusinessReviews(req, resp);
+			
+		} else{
+
 			// Invalid URL
 			resp.sendError(HttpServletResponse.SC_NOT_FOUND);
 		}
@@ -97,9 +116,13 @@ public class ReviewServlet extends HttpServlet{
 				businessUpdateStatus = businessService.updateRatings(business);
 				// If the business was successfully updated in the database return to the business reivews page.
 				if (businessUpdateStatus > 0){
-					RequestDispatcher rd = req.getRequestDispatcher("businessReviews.jsp?");
-					rd.forward(req, resp);
+					
+					// Change sorting to show the newest review first.
+					session.setAttribute(REVIEW_SORTING_STRING, "Newest");
+					getBusinessReviews(req, resp);
+					
 				} else {
+					
 					throw new Exception();
 				}
 			} else {	
@@ -154,21 +177,28 @@ public class ReviewServlet extends HttpServlet{
 				forwardToErrorPage(req, resp, "Error Updating Review Useful Count");
 			}
 				
-			RequestDispatcher rd = req.getRequestDispatcher("businessReviews.jsp?");
-			rd.forward(req, resp);
-				
+			getBusinessReviews(req, resp);			
 			
 		} catch (SQLException e) {
 			
 			e.printStackTrace();
 			forwardToErrorPage(req, resp, "Error Updating useful count");
 		}
-
 		
-
 	}
 	
+	/**
+	 * Forwards the user to the error page if something unexpected happened
+	 * @param req
+	 * @param resp
+	 * @param message
+	 * @throws ServletException
+	 * @throws IOException
+	 */
 	private void forwardToErrorPage(HttpServletRequest req, HttpServletResponse resp, String message) throws ServletException, IOException {
+		//Create a new session
+		session = req.getSession(true);
+		
 		RequestDispatcher rd = req.getRequestDispatcher("Error.jsp");
 		session = req.getSession(true);
 		session.setAttribute("errorMessage", message);
@@ -200,6 +230,11 @@ public class ReviewServlet extends HttpServlet{
 
 	}
 	
+	/**
+	 * Returns a review object with the review data from the http servlet request
+	 * @param req the http servlet request
+	 * @return the review object create from the http servlet request
+	 */
 	private Review setReviewData(HttpServletRequest req) {		
 		
 		// get review information from post.
@@ -227,6 +262,98 @@ public class ReviewServlet extends HttpServlet{
 		return review;
 		
 	}
+	
+	/**
+	 * Returns a list of reviews for the business requested by the http servlet request
+	 * @param request
+	 * @param response
+	 * @throws ServletException
+	 * @throws IOException
+	 */
+	private void getBusinessReviews(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
+		
+		//Create a new session
+		session = request.getSession(true);
+
+		int businessId = Integer.valueOf(request.getParameter("businessId"));
+		ReviewService reviewService = new ReviewService();
+
+
+		ArrayList<Review> reviewList = new ArrayList<>();
+
+		//Get number of restuarants to view, if not set use default value. 
+		int numReviews = getNumReviews(request, session);		
+		session.setAttribute(NUMBER_REVIEWS_STRING, numReviews);
+
+		//Get sorting, if not set use default value
+		String sortingString = getSortingString(request, session);
+		session.setAttribute(REVIEW_SORTING_STRING, sortingString);
+
+		try {
+			switch (sortingString){
+			case "Rating High To Low" : reviewList = reviewService.readReviews(businessId, numReviews, new ReviewReadRatingHighLow()); break;
+			case "Rating: Low To High" : reviewList = reviewService.readReviews(businessId, numReviews, new ReviewReadRatingLowHigh()); break;
+			case "Newest" : reviewList = reviewService.readReviews(businessId, numReviews, new ReviewReadNewest()); break;
+			case "Most Useful" : reviewList = reviewService.readReviews(businessId, numReviews, new ReviewReadMostUseful()); break;
+			default : reviewList = reviewService.readReviews(businessId, numReviews, new ReviewReadNewest());
+			}
+
+		} catch (Exception e) {
+			forwardToErrorPage(request, response, "Error reading reviews");
+			e.printStackTrace();
+		}
+
+		session.setAttribute(REVIEW_LIST_STRING, reviewList);
+
+		RequestDispatcher rd = request.getRequestDispatcher("businessReviews.jsp");
+		rd.forward(request, response);
+
+	}
+	
+	/**
+	 * Gets the sorting string
+	 * @param request
+	 * @return The sorting string 
+	 */
+	private String getSortingString(HttpServletRequest request, HttpSession session) {
+		String sortingString = "";
+
+		if(request.getParameter(REVIEW_SORTING_STRING) != null){
+			sortingString = (request.getParameter(REVIEW_SORTING_STRING).toString());
+			
+		} else if (session.getAttribute(REVIEW_SORTING_STRING) != null) {
+			sortingString = session.getAttribute(REVIEW_SORTING_STRING).toString();
+		} else {
+			sortingString = "Rating High To Low";
+		}
+		
+		return sortingString;
+	}
+	
+	/**
+	 * Gets the number of Reviews to return
+	 * @param request
+	 * @return the number of Reviews to return.
+	 */
+	private int getNumReviews(HttpServletRequest request, HttpSession session) {
+		
+		int numReviews;
+
+		// Get number of restuarants to view, if not set use default value. 
+		if(request.getParameter(NUMBER_REVIEWS_STRING) != null){
+			numReviews = Integer.valueOf(request.getParameter(NUMBER_REVIEWS_STRING).toString());		
+		} else if (session.getAttribute(NUMBER_REVIEWS_STRING) != null) {
+			numReviews = Integer.valueOf(session.getAttribute(NUMBER_REVIEWS_STRING).toString());
+		} else {
+			numReviews = 5; 
+		}	
+		
+		return numReviews;
+		
+	}
+	
+
+
 	
 
 

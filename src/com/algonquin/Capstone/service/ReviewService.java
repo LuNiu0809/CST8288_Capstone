@@ -10,7 +10,8 @@ import java.util.ArrayList;
 
 
 import com.algonquin.Capstone.beans.Review;
-
+import com.algonquin.Capstone.beans.User;
+import com.algonquin.Capstone.dao.UserDao;
 import com.algonquin.Capstone.dao.review.ReviewDao;
 import com.algonquin.Capstone.dao.review.ReviewReadBehaviour;
 
@@ -20,9 +21,11 @@ import com.algonquin.Capstone.dao.review.ReviewReadBehaviour;
 public class ReviewService implements ReviewServiceInterface{
 	
 	private ReviewDao reviewDao;
+	private UserDao userDao;
 	
 	public ReviewService() {
 		reviewDao = new ReviewDao();
+		
 	}
 	
 	@Override
@@ -51,6 +54,13 @@ public class ReviewService implements ReviewServiceInterface{
 	@Override
 	public ArrayList<Review> readAllReviews(int businessID) throws SQLException{
 		return reviewDao.readAllReviews(businessID);
+	}
+	
+	public User getReviewAuthor(Review review) {
+		userDao = new UserDao();
+		User reviewAuthor = new User();
+		reviewAuthor = userDao.getUserById(review.getAuthorID());
+		return reviewAuthor;
 	}
 	
 

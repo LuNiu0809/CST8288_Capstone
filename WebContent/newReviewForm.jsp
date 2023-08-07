@@ -23,7 +23,7 @@ business = businessService.readBusiness(businessId);
 <!-- Common Header to all pages -->
 <%@include file="header.jsp"%>
 
-<h1>Create a new review! for <%out.print(business.getName());%> (CST8288)</h1>
+<h1>Create a new review! for <%=business.getName()%> (CST8288)</h1>
 
 
   <div class="review">
@@ -54,7 +54,7 @@ business = businessService.readBusiness(businessId);
 				</tr>
 				<tr>
 				<!--// Source for code https://stackoverflow.com/questions/8021748/how-to-add-additional-parameters-on-a-form-submitting-it-with-get-method-->
-    			<td><input type="hidden" name="businessId" value=<%out.print(business.getId());%>><td>
+    			<td><input type="hidden" name="businessId" value=<%=business.getId()%>><td>
 				</tr>
 					
 				<tr>
