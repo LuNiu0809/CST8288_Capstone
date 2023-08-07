@@ -1,8 +1,4 @@
 <%@page import="com.algonquin.Capstone.servlets.ReviewServlet"%>
-<%@page import="com.algonquin.Capstone.dao.review.ReviewReadMostUseful"%>
-<%@page import="com.algonquin.Capstone.dao.review.ReviewReadNewest"%>
-<%@page import="com.algonquin.Capstone.dao.review.ReviewReadRatingLowHigh"%>
-<%@page import="com.algonquin.Capstone.dao.review.ReviewReadRatingHighLow"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@page import="java.lang.String"%>

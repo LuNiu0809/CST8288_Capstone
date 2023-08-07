@@ -39,7 +39,6 @@ public class ReviewServlet extends HttpServlet{
 	public static final String REVIEW_LIST_STRING = "reviewList";
 	
 	
-	
 	private HttpSession session;
 	
 	
@@ -117,10 +116,13 @@ public class ReviewServlet extends HttpServlet{
 				businessUpdateStatus = businessService.updateRatings(business);
 				// If the business was successfully updated in the database return to the business reivews page.
 				if (businessUpdateStatus > 0){
-//					RequestDispatcher rd = req.getRequestDispatcher("GetBusinessReviews");
-//					rd.forward(req, resp);
+					
+					// Change sorting to show the newest review first.
+					session.setAttribute(REVIEW_SORTING_STRING, "Newest");
 					getBusinessReviews(req, resp);
+					
 				} else {
+					
 					throw new Exception();
 				}
 			} else {	
@@ -175,21 +177,24 @@ public class ReviewServlet extends HttpServlet{
 				forwardToErrorPage(req, resp, "Error Updating Review Useful Count");
 			}
 				
-//			RequestDispatcher rd = req.getRequestDispatcher("GetBusinessReviews");
-//			rd.forward(req, resp);
-			getBusinessReviews(req, resp);
-				
+			getBusinessReviews(req, resp);			
 			
 		} catch (SQLException e) {
 			
 			e.printStackTrace();
 			forwardToErrorPage(req, resp, "Error Updating useful count");
 		}
-
 		
-
 	}
 	
+	/**
+	 * Forwards the user to the error page if something unexpected happened
+	 * @param req
+	 * @param resp
+	 * @param message
+	 * @throws ServletException
+	 * @throws IOException
+	 */
 	private void forwardToErrorPage(HttpServletRequest req, HttpServletResponse resp, String message) throws ServletException, IOException {
 		//Create a new session
 		session = req.getSession(true);
@@ -225,6 +230,11 @@ public class ReviewServlet extends HttpServlet{
 
 	}
 	
+	/**
+	 * Returns a review object with the review data from the http servlet request
+	 * @param req the http servlet request
+	 * @return the review object create from the http servlet request
+	 */
 	private Review setReviewData(HttpServletRequest req) {		
 		
 		// get review information from post.
@@ -253,6 +263,13 @@ public class ReviewServlet extends HttpServlet{
 		
 	}
 	
+	/**
+	 * Returns a list of reviews for the business requested by the http servlet request
+	 * @param request
+	 * @param response
+	 * @throws ServletException
+	 * @throws IOException
+	 */
 	private void getBusinessReviews(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
 		
 		//Create a new session
