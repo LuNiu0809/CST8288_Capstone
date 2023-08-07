@@ -1,3 +1,4 @@
+<%@page import="com.algonquin.Capstone.servlets.BusinessServlet"%>
 <%@page import="java.io.BufferedInputStream"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
@@ -34,8 +35,8 @@ if(session.getAttribute("numRestaurants") != null){
 }
 
 // Get Search String
-if(session.getAttribute("Search") != null){
-	searchString = session.getAttribute("Search").toString();
+if(session.getAttribute(BusinessServlet.BUSINESS_SEARCH_STRING) != null){
+	searchString = session.getAttribute(BusinessServlet.BUSINESS_SEARCH_STRING).toString();
 } else {
 	searchString = ""; 
 }
@@ -61,7 +62,7 @@ if(session.getAttribute("businessList") != null){
 			name="numRestaurants" id="numRestaurants"
 			onchange="this.form.submit()">
 			<option selected="selected">
-				<%out.print(numRestaurants);%>
+				<%=numRestaurants%>
 			</option>
 			<option value=5>5</option>
 			<option value=10>10</option>
@@ -73,15 +74,16 @@ if(session.getAttribute("businessList") != null){
 		<label for="businessSorting">Sort By:</label> 
 		<select name="sorting" id="sorting" onchange="this.form.submit()">
 			<option selected="selected">
-				<%out.print(sortingString);%>
+				<%=sortingString%>
 			</option>
 			<option value="Rating High To Low">Rating: High To Low</option>
 			<option value="Rating: Low To High">Rating: Low To High</option>
 			<option value="Price: High To Low">Price: High To Low</option>
 			<option value="Price: Low To High">Price: Low To High</option>
 		</select> 
-		<label for="Search">Search:</label> 
-		<input type="text"id="Search" name="Search" onchange="this.form.submit()" value=<%out.print(searchString);%> >
+		<label for=<%=BusinessServlet.BUSINESS_SEARCH_STRING%>>Search:</label> 
+		<input type="text"id=<%=BusinessServlet.BUSINESS_SEARCH_STRING%> name=<%=BusinessServlet.BUSINESS_SEARCH_STRING%>
+		 onchange="this.form.submit()" value=<%=searchString%> >
 	</form>
 
 	<div class="businessInfo">
@@ -90,21 +92,21 @@ if(session.getAttribute("businessList") != null){
 			<tr>
 				<td></td>
 				<td>
-					<%out.print(business.getName()); %>
+					<%=business.getName()%>
 				</td>
 				<td><a
-					href="businessReviews.jsp?businessId=<%out.print(business.getId());%>"
+					href="GetBusinessReviews?businessId=<%=business.getId()%>"
 					class="button">See Reviews</a></td>
 			</tr>
 			<tr>
-				<td><br> Overall Rating <%out.print(business.getOverallRating()); %>
-					/ 5 <br> <%out.print(business.getFoodType() + " - Price Rating " +  business.getPriceRating() + " / 5");%>
-					<br> <%out.print(business.getAddress());%> <br> <%out.print(business.getPhoneNumber());%>
+				<td><br> Overall Rating <%=business.getOverallRating()%>
+					/ 5 <br> <%=business.getFoodType() + " - Price Rating " +  business.getPriceRating() + " / 5"%>
+					<br> <%=business.getAddress()%> <br> <%=business.getPhoneNumber()%>
 					<br> <%out.print(business.getEmail());%></td>
-				<td>Hours of Operation: <br> <%out.print(business.getHoursOfOperation());%>
+				<td>Hours of Operation: <br> <%=business.getHoursOfOperation()%>
 				</td>
 				<td>
-					<%out.print(business.getDescription());%>
+					<%=business.getDescription()%>
 				</td>
 			</tr>
 			<tr></tr>

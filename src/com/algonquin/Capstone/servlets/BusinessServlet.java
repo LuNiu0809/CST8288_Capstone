@@ -24,6 +24,7 @@ public class BusinessServlet extends HttpServlet{
 	
 	private static final long serialVersionUID = 1L;
 	private HttpSession session;
+	public static final String BUSINESS_SEARCH_STRING = "BusinessSearchString";
 	
 	@Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -54,7 +55,7 @@ public class BusinessServlet extends HttpServlet{
 
 		// Get Search String
 		String searchString = getSearchString(request, session);
-		session.setAttribute("Search", searchString);
+		session.setAttribute(BUSINESS_SEARCH_STRING, searchString);
 		
 
 		//Get sorting, if not set use default value
@@ -116,10 +117,10 @@ public class BusinessServlet extends HttpServlet{
 	private String getSearchString(HttpServletRequest request, HttpSession session) {
 		String searchString = " ";
 		
-		if(request.getParameter("Search") != null){
-			searchString = (request.getParameter("Search").toString());		
-		} else if (session.getAttribute("Search") != null) {
-			searchString = session.getAttribute("Search").toString();
+		if(request.getParameter(BUSINESS_SEARCH_STRING) != null){
+			searchString = (request.getParameter(BUSINESS_SEARCH_STRING).toString());		
+		} else if (session.getAttribute(BUSINESS_SEARCH_STRING) != null) {
+			searchString = session.getAttribute(BUSINESS_SEARCH_STRING).toString();
 		} else searchString = " "; 	
 		
 		return searchString;
