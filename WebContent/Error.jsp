@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-    <%@page import="java.lang.String"%>
+    <%@page import="java.lang.String"%>   
+   <%@page isErrorPage="true"%>
 
 <!DOCTYPE html>
 <html>
@@ -18,8 +19,11 @@
 String message = "Error";
 if(session.getAttribute("errorMessage") != null){
 	 message = session.getAttribute("errorMessage").toString();
+	 out.print(message);
+} else {
+	out.print("An Error Occurred, Please try again later.");
 }
-out.print(message);
+
 %>
 
 
